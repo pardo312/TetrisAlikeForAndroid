@@ -7,34 +7,48 @@ namespace JiufenGames.TetrisAlike.Logic
 {
     public class BoardController : MonoBehaviour
     {
-        [SerializeField] private Tile[,] Board;
-        [SerializeField] private Tile TilePrefab;
-        [SerializeField] private Piece[] PieceTypes;
-        [SerializeField] private Queue<Piece> ListOfNextPieces;
-        private Piece CurrentPiece;
-        private int ROWS = 12;
-        private int COLUMNS = 6;
+        [Header("Necessary References")]
+        [SerializeField] private Tile _tilePrefab;
+        [SerializeField] private PiecesScriptable _piecesTypes;
+        [SerializeField] private Transform _tileParent;
+
+        [Header("Board Settings")]
+        [SerializeField] private int _rows = 12;
+        [SerializeField] private int _columns = 6;
+        [SerializeField] private float _offsetTiles = 0.5f;
+
+
+        private Piece _currentPiece;
+        private bool _shouldSpawnNewPiece = true;
+        private Tile[,] _board;
+        private Queue<Piece> _listOfNextPieces = new Queue<Piece>();
 
         void Start()
         {
-            Board = new Tile[ROWS, COLUMNS];
-            for (int i = 0; i < ROWS; i++)
-                for (int j = 0; j < COLUMNS; j++)
-                    Board[i, j] = Instantiate(TilePrefab, new Vector3(i + 1, j + 1, 0), Quaternion.identity);
+            _board = new Tile[_rows, _columns];
+            for (int i = 0; i < _rows; i++)
+                for (int j = 0; j < _columns; j++)
+                    _board[i, j] = Instantiate(_tilePrefab, new Vector3(j*(1+_offsetTiles),i*(1+_offsetTiles), 0), Quaternion.identity,_tileParent);
 
-            for (int k = 0; k < PieceTypes.Length - 1; k++)
-                ListOfNextPieces.Enqueue(PieceTypes[Random.Range(0, PieceTypes.Length)]);
+            for (int k = 0; k < _piecesTypes.pieces.Length - 1; k++)
+                _listOfNextPieces.Enqueue(_piecesTypes.pieces[Random.Range(0, _piecesTypes.pieces.Length)]);
         }
 
-        public bool shouldSpawnNewPiece = true;
         void Update()
         {
-            if (!shouldSpawnNewPiece)
+            if (!_shouldSpawnNewPiece)
                 return;
-            if (CurrentPiece == null)
+            if (_currentPiece == null)
             {
-                CurrentPiece = ListOfNextPieces.Dequeue();
-                ListOfNextPieces.Enqueue(PieceTypes[Random.Range(0, PieceTypes.Length)]);
+                _currentPiece = _listOfNextPieces.Dequeue();
+                _listOfNextPieces.Enqueue(_piecesTypes.pieces[Random.Range(0, _piecesTypes.pieces.Length)]);
+
+                
+
+            }
+            else
+            {
+
             }
 
 

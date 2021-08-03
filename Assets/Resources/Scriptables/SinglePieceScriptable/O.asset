@@ -12,10 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b45cb66233f7214186f0779536ae7d1, type: 3}
   m_Name: O
   m_EditorClassIdentifier: 
-  PieceName: 
-  PieceForms:
-  - pieceFormName: Need Name
-  - pieceFormName: Need Name
-  - pieceFormName: Need Name
-  - pieceFormName: Need Name
-  PieceColor: {r: 0, g: 1, b: 0, a: 1}
+  pieceName: O
+  pieceForms:
+  - pieceFormName: InitialForm
+    pieceTiles: 00000000000101000001010000000000
+  - pieceFormName: 90DegreeRotation
+    pieceTiles: 00000000000101000001010000000000
+  - pieceFormName: 180DegreeRotation
+    pieceTiles: 00000000000101000001010000000000
+  - pieceFormName: 270DegreeRotation
+    pieceTiles: 00000000000101000001010000000000
+  pieceColor: {r: 0.9827336, g: 1, b: 0, a: 1}

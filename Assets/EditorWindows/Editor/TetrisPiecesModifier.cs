@@ -12,6 +12,15 @@ public class TetrisPiecesModifier : EditorWindow
 
     public static TetrisPiecesModifier Instance { get { return _instance; } }
 
+    private const int LEFT_PANEL_WIDTH = 120;
+    private int _currentPiece = 0;
+    private int _previousPiece = 0;
+
+    public List<string> _piecesNames = new List<string>();
+    public PiecesScriptable _currentPiecesScriptable;
+    public Action<Piece> _onShowPieceForm;
+    public Action _onChangePiece; 
+
     private void Awake()
     {
         if (_instance != null && _instance != this)
@@ -22,22 +31,25 @@ public class TetrisPiecesModifier : EditorWindow
         {
             _instance = this;
         }
-        string[] scriptableList = AssetDatabase.FindAssets("t:" + typeof(PiecesScriptable));
-        if (scriptableList.Length == 0 || !AssetDatabase.GUIDToAssetPath(scriptableList[0]).Equals("Assets/Resources/Scriptables/PiecesScriptable.asset"))
+        if(_currentPiecesScriptable == null)
         {
-            string name = "Assets/Resources/Scriptables/PiecesScriptable.asset";
-            PiecesScriptable asset = ScriptableObject.CreateInstance<PiecesScriptable>();
-            AssetDatabase.CreateAsset(asset, name);
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
+            string[] scriptableList = AssetDatabase.FindAssets("t:" + typeof(PiecesScriptable));
+            if (scriptableList.Length == 0 || !AssetDatabase.GUIDToAssetPath(scriptableList[0]).Equals("Assets/Resources/Scriptables/PiecesScriptable.asset"))
+            {
+                string name = "Assets/Resources/Scriptables/PiecesScriptable.asset";
+                PiecesScriptable asset = ScriptableObject.CreateInstance<PiecesScriptable>();
+                AssetDatabase.CreateAsset(asset, name);
+                AssetDatabase.SaveAssets();
+                AssetDatabase.Refresh();
+            }
+            _currentPiecesScriptable = (PiecesScriptable)EditorGUIUtility.Load("Assets/Resources/Scriptables/PiecesScriptable.asset");
         }
 
-        PiecesScriptable = (PiecesScriptable)EditorGUIUtility.Load("Assets/Resources/Scriptables/PiecesScriptable.asset");
-        if (PiecesScriptable.Pieces != null)
+        if (_currentPiecesScriptable.pieces != null)
         {
-            foreach (Piece piece in PiecesScriptable.Pieces)
+            foreach (Piece piece in _currentPiecesScriptable.pieces)
             {
-                PiecesNames.Add(piece.PieceName);
+                _piecesNames.Add(piece.pieceName);
             }
         }
 
@@ -46,9 +58,6 @@ public class TetrisPiecesModifier : EditorWindow
 
     #endregion
 
-    public List<string> PiecesNames = new List<string>();
-    public PiecesScriptable PiecesScriptable;
-    private const int LEFT_PANEL_WIDTH = 120;
 
 
     [MenuItem("Geta/Platform Models Tests")]
@@ -57,9 +66,6 @@ public class TetrisPiecesModifier : EditorWindow
         GetWindow<TetrisPiecesModifier>(false, "WindowTest", true);
     }
 
-    private int currentPiece = 0;
-    private int previousPiece = 0;
-    public Action<Piece> OnShowPieceForm;
 
     void OnGUI()
     {
@@ -68,10 +74,11 @@ public class TetrisPiecesModifier : EditorWindow
             //Choose piece to modify
             GUILayout.BeginVertical(GUILayout.Width(10));
                 EditorGUILayout.LabelField("Piece To Modify:", GUILayout.Width(LEFT_PANEL_WIDTH));
-                currentPiece = EditorGUILayout.Popup(currentPiece, PiecesNames.ToArray(), GUILayout.Width(LEFT_PANEL_WIDTH));
-                if (currentPiece != previousPiece)
+                _currentPiece = EditorGUILayout.Popup(_currentPiece, _piecesNames.ToArray(), GUILayout.Width(LEFT_PANEL_WIDTH));
+                if (_currentPiece != _previousPiece)
                 {
-                    previousPiece = currentPiece;
+                    _onChangePiece?.Invoke();
+                    _previousPiece = _currentPiece;
                 }
             GUILayout.EndVertical();
 
@@ -79,10 +86,12 @@ public class TetrisPiecesModifier : EditorWindow
             EditorGUILayout.LabelField("", GUI.skin.verticalSlider, GUILayout.Width(5), GUILayout.ExpandHeight(true));
             
             GUILayout.BeginVertical(GUILayout.ExpandWidth(true));
-                OnShowPieceForm?.Invoke(PiecesScriptable.Pieces[currentPiece]);
+                _onShowPieceForm?.Invoke(_currentPiecesScriptable.pieces[_currentPiece]);
             GUILayout.EndVertical();
 
         EditorGUILayout.EndHorizontal();
+
+         EditorUtility.SetDirty(_currentPiecesScriptable);
     }
 
 }

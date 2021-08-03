@@ -8,8 +8,8 @@ namespace JiufenGames.TetrisAlike.Model
     [System.Serializable]
     public class Piece:ScriptableObject 
     {
-        public string PieceName;
-        public PieceForm[] PieceForms = new PieceForm[4];
-        public Color PieceColor = Color.green;
+        public string pieceName;
+        public PieceForm[] pieceForms = new PieceForm[4];
+        public Color pieceColor = Color.green;
     }
 }

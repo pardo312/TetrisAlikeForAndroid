@@ -12,7 +12,8 @@ namespace JiufenGames.TetrisAlike.Model
         private const int LEFT_PANEL_WIDTH = 120;
         public static void InitPieceFormSelection()
         {
-            TetrisPiecesModifier.Instance.OnShowPieceForm += ShowPieceForm;
+            TetrisPiecesModifier.Instance._onShowPieceForm += ShowPieceForm;
+            TetrisPiecesModifier.Instance._onChangePiece += () => { currentPieceForm = 0; previousPieceForm = 0; };
         }
         public static List<string> PieceFormOptions = new List<string>();
         public static int currentPieceForm = 0;
@@ -21,7 +22,7 @@ namespace JiufenGames.TetrisAlike.Model
         public static void ShowPieceForm(Piece currentPiece)
         {
             PieceFormOptions = new List<string>();
-            foreach (PieceForm pieceForm in currentPiece.PieceForms)
+            foreach (PieceForm pieceForm in currentPiece.pieceForms)
             {
                 PieceFormOptions.Add(pieceForm.pieceFormName);
             }
@@ -30,42 +31,39 @@ namespace JiufenGames.TetrisAlike.Model
             currentPieceForm = EditorGUILayout.Popup(currentPieceForm, PieceFormOptions.ToArray(), GUILayout.ExpandWidth(true));
 
             EditorGUILayout.LabelField("", GUI.skin.horizontalSlider, GUILayout.ExpandWidth(true));
-            currentPiece.PieceColor = EditorGUILayout.ColorField(currentPiece.PieceColor,  GUILayout.ExpandWidth(true));
-
+            currentPiece.pieceColor = EditorGUILayout.ColorField(currentPiece.pieceColor, GUILayout.ExpandWidth(true));
+            //ShowListOfPieceTiles(currentPiece, currentPieceForm);
             //Slider
             EditorGUILayout.LabelField("", GUI.skin.horizontalSlider, GUILayout.ExpandWidth(true));
-            bool[,] currentPieceTiles = currentPiece.PieceForms[currentPieceForm].PieceTiles;
-            ShowPieceFormEditor(currentPieceTiles,currentPiece.PieceColor);
-
+            ShowPieceFormEditor(currentPiece.pieceForms[currentPieceForm].pieceTiles, currentPiece.pieceColor);
         }
 
-        private static void ShowPieceFormEditor(bool[,] tiles, Color currentPieceColor)
+        private static void ShowPieceFormEditor(bool[] tiles, Color currentPieceColor)
         {
             //Style Of The row column button
             GUI.backgroundColor = Color.white;
             for (int i = 0; i < 4; i++)
             {
                 EditorGUILayout.BeginHorizontal(GUILayout.ExpandHeight(true));
-                    GUILayout.FlexibleSpace();
-                    for (int j = 0; j < 4; j++)
-                    {
-                        PaintButton(i,j,tiles,currentPieceColor);
-                    }
-                    GUILayout.FlexibleSpace();
+                GUILayout.FlexibleSpace();
+                for (int j = 0; j < 4; j++)
+                {
+                    PaintButton(i, j, tiles, currentPieceColor);
+                }
+                GUILayout.FlexibleSpace();
                 EditorGUILayout.EndHorizontal();
             }
             GUILayout.FlexibleSpace();
-
         }
 
-        private static void PaintButton(int i, int j,bool[,] tiles, Color currentPieceColor)
+        private static void PaintButton(int i, int j, bool[] tiles, Color currentPieceColor)
         {
-            if (tiles[i,j])
+            if (tiles[i + (j * PieceForm.PIECE_TILES_WIDTH)])
             {
                 GUI.backgroundColor = currentPieceColor;
                 if (GUILayout.Button("", GUILayout.Width(80), GUILayout.Height(80)))
                 {
-                    tiles[i, j] = false;
+                    tiles[i + (j * PieceForm.PIECE_TILES_WIDTH)] = false;
                 }
                 GUI.backgroundColor = Color.white;
             }
@@ -73,10 +71,9 @@ namespace JiufenGames.TetrisAlike.Model
             {
                 if (GUILayout.Button("-", GUILayout.Width(80), GUILayout.Height(80)))
                 {
-                    tiles[i, j] = true;
+                    tiles[i + (j * PieceForm.PIECE_TILES_WIDTH)] = true;
                 }
             }
-
         }
     }
 }

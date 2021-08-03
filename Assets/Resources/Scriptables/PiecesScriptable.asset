@@ -12,6 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bbd85552b90cb94291694e02b650950, type: 3}
   m_Name: PiecesScriptable
   m_EditorClassIdentifier: 
-  Pieces:
-  - {fileID: 11400000, guid: 8cef6173604579b459a0f661d0db2930, type: 2}
+  pieces:
+  - {fileID: 11400000, guid: e33cfbf9b04bcbe43a1bded987fa1573, type: 2}
+  - {fileID: 11400000, guid: 77f9c8364843876448fec61b657be3c1, type: 2}
   - {fileID: 11400000, guid: dcbe0738b062f084f8bae5f5e7e5289e, type: 2}
+  - {fileID: 11400000, guid: ada6d1c83131f504787f2368e9fe962a, type: 2}
+  - {fileID: 11400000, guid: 8cef6173604579b459a0f661d0db2930, type: 2}
+  - {fileID: 11400000, guid: 2e3fa37e57265514b9fe8a72f908abdd, type: 2}
+  - {fileID: 11400000, guid: 148bbd15773fd7540b241fd949b25e16, type: 2}

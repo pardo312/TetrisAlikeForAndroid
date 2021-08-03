@@ -1,6 +1,9 @@
-using UnityEngine;
+﻿using UnityEngine;
 
-public class Tile:MonoBehaviour
+namespace JiufenGames.TetrisAlike.Logic
 {
-
+    public class Tile: MonoBehaviour
+    {
+        public bool isFilled;
+    }
 }
