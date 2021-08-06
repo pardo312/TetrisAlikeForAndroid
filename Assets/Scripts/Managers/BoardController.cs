@@ -7,6 +7,7 @@ namespace JiufenGames.TetrisAlike.Logic
 {
     public class BoardController : MonoBehaviour
     {
+        #region Variables
         [Header("Necessary References")]
         [SerializeField] private Tile _tilePrefab;
         [SerializeField] private PiecesScriptable _piecesTypes;
@@ -22,7 +23,9 @@ namespace JiufenGames.TetrisAlike.Logic
         private bool _shouldSpawnNewPiece = true;
         private Tile[,] _board;
         private Queue<Piece> _listOfNextPieces = new Queue<Piece>();
+        #endregion
 
+        #region Init
         void Start()
         {
             _board = new Tile[_rows, _columns];
@@ -37,7 +40,40 @@ namespace JiufenGames.TetrisAlike.Logic
             for (int k = 0; k < _piecesTypes.pieces.Length - 1; k++)
                 _listOfNextPieces.Enqueue(_piecesTypes.pieces[Random.Range(0, _piecesTypes.pieces.Length)]);
         }
-        private float _timeBetweenFalls = 0.4f;
+
+        private void SpawnPiece()
+        {
+            int offset = 0;
+            //Spawn Piece in the upper 4x4 space of the board
+            for (int i = _rows - 4; i < _rows; i++)
+            {
+                bool shouldSkipRow = false;
+                for (int j = 3; j <= 6; j++)
+                    if (_board[i, j]._isFilled)
+                    {
+                        shouldSkipRow = true;
+                    }
+
+                if (shouldSkipRow)
+                {
+                    offset++;
+                    continue;
+                }
+
+                int p = 0;
+                for (int j = 3; j <= 6; j++)
+                    if (_currentPiece.pieceForms[0].pieceTiles[((_rows - 1)-i+offset) + ((j - 3) * PieceForm.PIECE_TILES_WIDTH)])
+                    {
+                        _board[i, j].ChangeColorOfTile(_currentPiece.pieceColor);
+                        _board[i, j]._isPartFromCurrentPiece = true;
+                    }
+            }
+        }
+        #endregion
+
+        #region GameFlow
+
+        private float _timeBetweenFalls = 0.05f;
         private float _timer = 2;
         void Update()
         {
@@ -51,48 +87,72 @@ namespace JiufenGames.TetrisAlike.Logic
                 _currentPiece = _listOfNextPieces.Dequeue();
                 _listOfNextPieces.Enqueue(_piecesTypes.pieces[Random.Range(0, _piecesTypes.pieces.Length)]);
                 SpawnPiece();
-                _shouldSpawnNewPiece = false; 
+                _shouldSpawnNewPiece = false;
                 return;
             }
-            Vector2Int[] pieceTiles = new Vector2Int[4];
-            int currentIndexPieceTiles = 0;
 
-            for (int i = _rows - 1; i > 0; i--)
+            List<Vector2Int> pieceTiles;
+            SearchForCurrentPieceTiles(out pieceTiles);
+
+            if(CheckIfPieceIsInFinalPosition(pieceTiles))
+            {
+                CheckTileBelow(pieceTiles);
+                return;
+            }
+
+            DropPieceTile(pieceTiles);
+        }
+        private void SearchForCurrentPieceTiles(out List<Vector2Int> pieceTiles)
+        {
+            pieceTiles = new List<Vector2Int>();
+            //Search For current Pieces Tiles
+
+            for (int i = _rows - 1; i >= 0; i--)
+            {
                 for (int j = 0; j < _columns - 1; j++)
                     if (_board[i, j]._isPartFromCurrentPiece)
                     {
-                        pieceTiles[currentIndexPieceTiles] = new Vector2Int(i, j);
-                        currentIndexPieceTiles++;
+                        pieceTiles.Add(new Vector2Int(i, j));
                     }
-
-            for (int k = 3; k >= 0; k--)
-            {
-                if(pieceTiles[k].x-1 == 0 || _board[pieceTiles[k].x - 2, pieceTiles[k].y]._isFilled)
-                    _shouldSpawnNewPiece = true;
             }
-            for (int k = 3; k >= 0; k--)
-            {
-                if(_shouldSpawnNewPiece)
-                    _board[pieceTiles[k].x - 1, pieceTiles[k].y]._isFilled = true;
-                else
-                    _board[pieceTiles[k].x - 1, pieceTiles[k].y]._isPartFromCurrentPiece = true;
+        }
 
+        private bool CheckIfPieceIsInFinalPosition(List<Vector2Int> pieceTiles)
+        {
+            bool pieceFinalPosition = false;
+            for (int k = pieceTiles.Count-1; k >= 0; k--)
+                if (pieceTiles[k].x == 0 || _board[pieceTiles[k].x - 1, pieceTiles[k].y]._isFilled)
+                    pieceFinalPosition = true;
+            return pieceFinalPosition;
+        }
+
+        private void CheckTileBelow(List<Vector2Int> pieceTiles)
+        {
+            for (int m = pieceTiles.Count-1; m >= 0; m--)
+            {
+                if (pieceTiles[m].x != 19)
+                {
+                    _board[pieceTiles[m].x, pieceTiles[m].y]._isFilled = true;
+                    _board[pieceTiles[m].x, pieceTiles[m].y]._isPartFromCurrentPiece = false;
+                    _shouldSpawnNewPiece = true;
+                }
+                else
+                {
+                    Debug.Log("Endgame");
+                    Debug.Break();
+                }
+            }
+        }
+
+        private void DropPieceTile(List<Vector2Int> pieceTiles)
+        {
+            for (int k = pieceTiles.Count-1; k >= 0; k--)
+            {
+                _board[pieceTiles[k].x - 1, pieceTiles[k].y]._isPartFromCurrentPiece = true;
                 _board[pieceTiles[k].x - 1, pieceTiles[k].y].ChangeColorOfTile(_currentPiece.pieceColor);
                 _board[pieceTiles[k].x, pieceTiles[k].y].Reset();
             }
-
         }
-
-        private void SpawnPiece()
-        {
-            //Spawn Piece in the upper 4x4 space of the board
-            for (int i = _rows - 4; i <= _rows - 1; i++)
-                for (int j = 3; j <= 6; j++)
-                    if (_currentPiece.pieceForms[0].pieceTiles[(_rows - 1 - i) + ((j - 3) * PieceForm.PIECE_TILES_WIDTH)])
-                    {
-                        _board[i, j].ChangeColorOfTile(_currentPiece.pieceColor);
-                        _board[i, j]._isPartFromCurrentPiece = true;
-                    }
-        }
+        #endregion
     }
 }
