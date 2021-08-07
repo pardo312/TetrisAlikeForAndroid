@@ -14,10 +14,10 @@ namespace JiufenGames.TetrisAlike.Logic
         [SerializeField] private Transform _tileParent;
 
         [Header("Board Settings")]
-        [SerializeField] private int _rows = 12;
-        [SerializeField] private int _columns = 6;
         [SerializeField] private float _offsetTiles = 0.5f;
-
+        [SerializeField] private int _columns = 10;
+        [SerializeField] private int _realRows = 20;
+        private int _totalRows;
 
         private Piece _currentPiece;
         private bool _shouldSpawnNewPiece = true;
@@ -28,52 +28,31 @@ namespace JiufenGames.TetrisAlike.Logic
         #region Init
         void Start()
         {
-            _board = new Tile[_rows, _columns];
-            for (int i = 0; i < _rows; i++)
+            //3 EmptyRows To handle final round pieces.
+            _totalRows = _realRows + 3;
+            _board = new Tile[_totalRows, _columns];
+            for (int i = 0; i < _totalRows; i++)
                 for (int j = 0; j < _columns; j++)
                 {
                     _board[i, j] = Instantiate(_tilePrefab, new Vector3(j * (1 + _offsetTiles), i * (1 + _offsetTiles), 0), Quaternion.identity, _tileParent);
                     _board[i, j]._tileRow = i;
                     _board[i, j]._tileColumn = j;
+                    if (i >= _realRows)
+                    {
+                        _board[i, j].SetPieceToBeHidden();
+                    }
                 }
 
             for (int k = 0; k < _piecesTypes.pieces.Length - 1; k++)
                 _listOfNextPieces.Enqueue(_piecesTypes.pieces[Random.Range(0, _piecesTypes.pieces.Length)]);
         }
 
-        private void SpawnPiece()
-        {
-            int offset = 0;
-            //Spawn Piece in the upper 4x4 space of the board
-            for (int i = _rows - 4; i < _rows; i++)
-            {
-                bool shouldSkipRow = false;
-                for (int j = 3; j <= 6; j++)
-                    if (_board[i, j]._isFilled)
-                    {
-                        shouldSkipRow = true;
-                    }
-
-                if (shouldSkipRow)
-                {
-                    offset++;
-                    continue;
-                }
-
-                int p = 0;
-                for (int j = 3; j <= 6; j++)
-                    if (_currentPiece.pieceForms[0].pieceTiles[((_rows - 1)-i+offset) + ((j - 3) * PieceForm.PIECE_TILES_WIDTH)])
-                    {
-                        _board[i, j].ChangeColorOfTile(_currentPiece.pieceColor);
-                        _board[i, j]._isPartFromCurrentPiece = true;
-                    }
-            }
-        }
         #endregion
 
         #region GameFlow
 
-        private float _timeBetweenFalls = 0.05f;
+        #region Update
+        private float _timeBetweenFalls = 0.01f;
         private float _timer = 2;
         void Update()
         {
@@ -94,7 +73,7 @@ namespace JiufenGames.TetrisAlike.Logic
             List<Vector2Int> pieceTiles;
             SearchForCurrentPieceTiles(out pieceTiles);
 
-            if(CheckIfPieceIsInFinalPosition(pieceTiles))
+            if (CheckIfPieceIsInFinalPosition(pieceTiles))
             {
                 CheckTileBelow(pieceTiles);
                 return;
@@ -102,14 +81,44 @@ namespace JiufenGames.TetrisAlike.Logic
 
             DropPieceTile(pieceTiles);
         }
+        #endregion
+
+        #region Spawn
+        private void SpawnPiece()
+        {
+            int offset = 0;
+            //Spawn Piece in the upper 4x4 space of the board
+            for (int i = _realRows - 4; i < _realRows; i++)
+            {
+                bool rowFilled = false;
+                for (int j = 3; j <= 6; j++)
+                    if (_board[i, j]._isFilled)
+                        rowFilled = true;
+
+                if(rowFilled)
+                    offset++;
+            }
+            for (int i = _realRows - 4; i < _realRows; i++)
+            {
+                for (int j = 3; j <= 6; j++)
+                    if (_currentPiece.pieceForms[0].pieceTiles[((_realRows - 1) - i) + ((j - 3) * PieceForm.PIECE_TILES_WIDTH)])
+                    {
+                        _board[i + offset, j].ChangeColorOfTile(_currentPiece.pieceColor);
+                        _board[i + offset, j]._isPartFromCurrentPiece = true;
+                    }
+            }
+        }
+        #endregion
+
+        #region Verify current Piece
         private void SearchForCurrentPieceTiles(out List<Vector2Int> pieceTiles)
         {
             pieceTiles = new List<Vector2Int>();
             //Search For current Pieces Tiles
 
-            for (int i = _rows - 1; i >= 0; i--)
+            for (int i = _totalRows - 1; i >= 0; i--)
             {
-                for (int j = 0; j < _columns - 1; j++)
+                for (int j = 0; j < _columns; j++)
                     if (_board[i, j]._isPartFromCurrentPiece)
                     {
                         pieceTiles.Add(new Vector2Int(i, j));
@@ -120,7 +129,7 @@ namespace JiufenGames.TetrisAlike.Logic
         private bool CheckIfPieceIsInFinalPosition(List<Vector2Int> pieceTiles)
         {
             bool pieceFinalPosition = false;
-            for (int k = pieceTiles.Count-1; k >= 0; k--)
+            for (int k = pieceTiles.Count - 1; k >= 0; k--)
                 if (pieceTiles[k].x == 0 || _board[pieceTiles[k].x - 1, pieceTiles[k].y]._isFilled)
                     pieceFinalPosition = true;
             return pieceFinalPosition;
@@ -128,31 +137,37 @@ namespace JiufenGames.TetrisAlike.Logic
 
         private void CheckTileBelow(List<Vector2Int> pieceTiles)
         {
-            for (int m = pieceTiles.Count-1; m >= 0; m--)
+            for (int m = pieceTiles.Count - 1; m >= 0; m--)
             {
-                if (pieceTiles[m].x != 19)
+                _board[pieceTiles[m].x, pieceTiles[m].y]._isPartFromCurrentPiece = false;
+                _board[pieceTiles[m].x, pieceTiles[m].y]._isFilled = true;
+
+                if (pieceTiles[m].x < _realRows-2)
                 {
-                    _board[pieceTiles[m].x, pieceTiles[m].y]._isFilled = true;
-                    _board[pieceTiles[m].x, pieceTiles[m].y]._isPartFromCurrentPiece = false;
                     _shouldSpawnNewPiece = true;
                 }
-                else
-                {
-                    Debug.Log("Endgame");
-                    Debug.Break();
-                }
+            }
+            if (!_shouldSpawnNewPiece)
+            {
+                Debug.Log("Endgame");
+                Debug.Break();
             }
         }
+        #endregion
+
+        #region Move Piece
 
         private void DropPieceTile(List<Vector2Int> pieceTiles)
         {
-            for (int k = pieceTiles.Count-1; k >= 0; k--)
+            for (int k = pieceTiles.Count - 1; k >= 0; k--)
             {
                 _board[pieceTiles[k].x - 1, pieceTiles[k].y]._isPartFromCurrentPiece = true;
                 _board[pieceTiles[k].x - 1, pieceTiles[k].y].ChangeColorOfTile(_currentPiece.pieceColor);
                 _board[pieceTiles[k].x, pieceTiles[k].y].Reset();
             }
         }
+        #endregion
+
         #endregion
     }
 }

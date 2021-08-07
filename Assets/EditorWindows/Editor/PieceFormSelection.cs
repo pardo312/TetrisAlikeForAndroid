@@ -42,7 +42,7 @@ namespace JiufenGames.TetrisAlike.Model
         {
             //Style Of The row column button
             GUI.backgroundColor = Color.white;
-            for (int i = 0; i < 4; i++)
+            for (int i = 3; i >= 0; i--)
             {
                 EditorGUILayout.BeginHorizontal(GUILayout.ExpandHeight(true));
                 GUILayout.FlexibleSpace();

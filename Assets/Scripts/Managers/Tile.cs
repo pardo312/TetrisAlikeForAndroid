@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace JiufenGames.TetrisAlike.Logic
 {
@@ -13,6 +14,7 @@ namespace JiufenGames.TetrisAlike.Logic
         private SpriteRenderer _spriteRenderer;
 
         [HideInInspector] public Color _color;
+        public bool _isPartOfHiddenBoard = false;
 
         public void Awake()
         {
@@ -21,16 +23,28 @@ namespace JiufenGames.TetrisAlike.Logic
         }
         public void ChangeColorOfTile(Color newColor)
         {
-            _color = newColor; 
-            _spriteRenderer.color = _color;
-
+            if (!_isPartOfHiddenBoard)
+            {
+                _color = newColor; 
+                _spriteRenderer.color = _color;
+            }
         }
         public void Reset()
         {
-            _color = new Color(0.1f, 0.1f, 0.1f, 1);
-            _spriteRenderer.color = _color;
+            if (!_isPartOfHiddenBoard)
+            {
+                _color = new Color(0.1f, 0.1f, 0.1f, 1);
+                _spriteRenderer.color = _color;
+            }
+
             _isFilled = false;
             _isPartFromCurrentPiece = false;
+        }
+
+        public void SetPieceToBeHidden()
+        {
+            ChangeColorOfTile(Color.clear);
+            _isPartOfHiddenBoard = true;
         }
     }
 }
