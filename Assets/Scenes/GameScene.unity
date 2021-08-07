@@ -424,9 +424,9 @@ MonoBehaviour:
   _tilePrefab: {fileID: 6272846969044427285, guid: 991cd81ac69a2454396c315ce2c699c3, type: 3}
   _piecesTypes: {fileID: 11400000, guid: 3ae9c107c18835545839e26141575473, type: 2}
   _tileParent: {fileID: 793928150}
-  _rows: 20
-  _columns: 10
   _offsetTiles: 0.1
+  _columns: 10
+  _realRows: 20
 --- !u!4 &1483877067
 Transform:
   m_ObjectHideFlags: 0
