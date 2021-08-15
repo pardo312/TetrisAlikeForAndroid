@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4f66a0210fa1e541b6033a424330c45, type: 3}
+  m_Name: InputsConfigScriptable
+  m_EditorClassIdentifier: 
+  _inputSource: 0
+  _moveLeft: 97
+  _moveRight: 100
+  _softDrop: 115
+  _hardDrop: 119
+  _rotateClockwise: 107
+  _rotateCounterClockwise: 106
+  _storePiece: 101

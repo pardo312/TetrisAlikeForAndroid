@@ -4,7 +4,7 @@ using UnityEngine;
 namespace JiufenGames.TetrisAlike.Model
 {
 
-    [CreateAssetMenu(fileName = "Piece.asset", menuName = "TetrisAlike/Piece")]
+    [CreateAssetMenu(fileName = "Piece.asset", menuName = "TetrisAlike/Pieces/Piece")]
     [System.Serializable]
     public class Piece:ScriptableObject 
     {
