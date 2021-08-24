@@ -17,7 +17,7 @@ namespace JiufenGames.TetrisAlike.Logic
             if (_boardController == null)
                 _boardController = GetComponent<BoardController>();
 
-            InputsController._instance.timeBetweenInputs = _boardController._timeBetweenFalls * 0.5f;
+            InputsController._instance._initialTimeBetweenInputs = _boardController._timeBetweenFalls * 0.5f;
             InputsController._instance._OnMovePiece += MovePiece;
             InputsController._instance._OnDropPiece += DropPiece;
             InputsController._instance._OnRotatePiece += RotatePiece;
@@ -42,7 +42,13 @@ namespace JiufenGames.TetrisAlike.Logic
 
         private bool DropPiece(bool softDrop)
         {
-            return false;
+            _boardController.userExecutingAction = true;
+            bool pieceMoved = false;
+            if (softDrop)
+                pieceMoved = _boardController.MovePiecesInSomeDirection(-1,0);
+            
+            _boardController.userExecutingAction = false;
+            return pieceMoved;
         }
 
         private bool RotatePiece(bool clockwise)

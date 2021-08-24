@@ -153,8 +153,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _inputsConfig: {fileID: 11400000, guid: ae8463c9d19c628428e51f00f843a630, type: 2}
-  timeBetweenInputs: 0.1
-  currentTimeBetweenInputs: 0.1
+  _initialTimeBetweenInputs: 0.1
+  _currentTimeBetweenInputs: 0.1
 --- !u!4 &91466691
 Transform:
   m_ObjectHideFlags: 0
