@@ -9,6 +9,7 @@ namespace JiufenGames.TetrisAlike.Logic
     {
         #region Variables
         [SerializeField] private BoardController _boardController;
+        private bool _needToWaitForNextSpawn = false;
         #endregion
 
         #region Init
@@ -26,39 +27,60 @@ namespace JiufenGames.TetrisAlike.Logic
         }
         #endregion
 
-        private bool MovePiece(bool toLeft)
+        private void Update()
         {
+            // Check if the nextPiece has spawned
+            if (_needToWaitForNextSpawn )
+                _needToWaitForNextSpawn  = !_boardController._shouldSpawnNewPiece;
+        }
+
+        private void MovePiece(bool toLeft)
+        {
+            if (_needToWaitForNextSpawn)
+                return;
             _boardController.userExecutingAction = true;
 
             int direction = 1;
             if (toLeft)
                 direction = -1;
 
-            bool pieceMoved = _boardController.MovePiecesInSomeDirection(0, direction);
+            _boardController.MovePiecesInSomeDirection(0, direction);
             
             _boardController.userExecutingAction = false;
-            return pieceMoved;
         }
 
-        private bool DropPiece(bool softDrop)
+        private void DropPiece(bool softDrop)
         {
+            if (_needToWaitForNextSpawn)
+                return;
+
             _boardController.userExecutingAction = true;
-            bool pieceMoved = false;
             if (softDrop)
-                pieceMoved = _boardController.MovePiecesInSomeDirection(-1,0);
+                _boardController.MovePiecesInSomeDirection(-1,0);
+            else
+            {
+                _boardController.HardDropPiece();
+                _needToWaitForNextSpawn = true;
+            }
             
             _boardController.userExecutingAction = false;
-            return pieceMoved;
         }
 
-        private bool RotatePiece(bool clockwise)
+        private void RotatePiece(bool clockwise)
         {
-            return false;
+            if (_needToWaitForNextSpawn)
+                return;
+
+            _boardController.userExecutingAction = true;
+            _boardController.RotatePiece(clockwise);
+            _boardController.userExecutingAction = false;
         }
 
-        private bool StorePiece()
+        private void StorePiece()
         {
-            return false;
+            if (_needToWaitForNextSpawn)
+                return;
+            return;
         }
 
     }

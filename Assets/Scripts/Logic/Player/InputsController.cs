@@ -33,17 +33,16 @@ public class InputsController : MonoBehaviour
     private float _timer = 0;
 
     //Delegates 
-    public Func<bool, bool> _OnMovePiece;
-    public Func<bool, bool> _OnDropPiece;
-    public Func<bool, bool> _OnRotatePiece;
-    public Func<bool> _OnStorePiece;
+    public Action<bool> _OnMovePiece;
+    public Action<bool> _OnDropPiece;
+    public Action<bool> _OnRotatePiece;
+    public Action _OnStorePiece;
 
     // KeyPressed Record
     private KeyCode _lastKeyPressed = KeyCode.None;
     private int timesPressed = 0;
 
     //Input timing
-    private int _normalTimeNeededTimePresses = 5;
     private int _neededTimePresses = 5;
 
     #endregion
@@ -64,24 +63,39 @@ public class InputsController : MonoBehaviour
         if (Input.GetKey(_inputsConfig._moveLeft))
             CheckContinuousInput(
                 _inputsConfig._moveLeft,
-                InputsConsts.INITIAL_NEEDED_TIMES_PRESSED ,
-                _normalTimeNeededTimePresses,
+                InputsConsts.INITIAL_NEEDED_TIMES_PRESSED,
                 () => _OnMovePiece?.Invoke(true)
             );
         else if (Input.GetKey(_inputsConfig._moveRight))
             CheckContinuousInput(
                 _inputsConfig._moveRight,
-                InputsConsts.INITIAL_NEEDED_TIMES_PRESSED ,
-                _normalTimeNeededTimePresses,
+                InputsConsts.INITIAL_NEEDED_TIMES_PRESSED,
                 () => _OnMovePiece?.Invoke(false)
             );
         // Dropping piece
         else if (Input.GetKey(_inputsConfig._softDrop))
             CheckContinuousInput(
                 _inputsConfig._softDrop,
-                InputsConsts.INITIAL_NEEDED_TIMES_PRESSED ,
-                _normalTimeNeededTimePresses,
+                InputsConsts.INITIAL_NEEDED_TIMES_PRESSED,
                 () => _OnDropPiece?.Invoke(true)
+            );
+        // Hard Dropping piece
+        else if (Input.GetKey(_inputsConfig._hardDrop))
+            CheckSingleInput(
+                _inputsConfig._hardDrop,
+                () => _OnDropPiece?.Invoke(false)
+            );
+        // Rotating Pieces
+        else if (Input.GetKey(_inputsConfig._rotateClockwise))
+
+            CheckSingleInput(
+                _inputsConfig._rotateClockwise,
+                () => _OnRotatePiece?.Invoke(true)
+            );
+        else if (Input.GetKey(_inputsConfig._rotateCounterClockwise))
+            CheckSingleInput(
+                _inputsConfig._rotateCounterClockwise,
+                () => _OnRotatePiece?.Invoke(false)
             );
         //No key Pressed
         else
@@ -90,18 +104,6 @@ public class InputsController : MonoBehaviour
             _lastKeyPressed = KeyCode.None;
         }
 
-        //TODO:
-        //else if (Input.GetKey(_inputsConfig._hardDrop))
-        //    CheckSingleInput(
-        //        _inputsConfig._hardDrop,
-        //        () => _OnDropPiece?.Invoke(false)
-        //    );
-
-        //// Rotating Pieces
-        //if (Input.GetKey(_inputsConfig._rotateClockwise))
-        //   userDidInput = _OnRotatePiece?.Invoke(true) == true;
-        //if (Input.GetKey(_inputsConfig._rotateCounterClockwise))
-        //   userDidInput = _OnRotatePiece?.Invoke(false) == true;
 
         ////Storing Pieces
         //if (Input.GetKey(_inputsConfig._storePiece))
@@ -116,7 +118,7 @@ public class InputsController : MonoBehaviour
     /// <param name="initWaitPressedTimesFactor"> The init wait time to start continuous movement.</param>
     /// <param name="normalPressedTimes">The normal pressed times once it has started continous movement</param>
     /// <param name="inputAction">The action to execute.</param>
-    private void CheckContinuousInput(KeyCode keyCode, int initWaitPressedTimesFactor,int normalPressedTimes, Func<bool?> inputAction)
+    private void CheckContinuousInput(KeyCode keyCode, int initWaitPressedTimesFactor, Action inputAction)
     {
         if (_lastKeyPressed == keyCode)
         {
@@ -125,13 +127,13 @@ public class InputsController : MonoBehaviour
             {
                 inputAction.Invoke();
                 timesPressed = 0;
-                if (_neededTimePresses != normalPressedTimes)
-                    _neededTimePresses = normalPressedTimes;
+                if (_neededTimePresses != InputsConsts.ON_CONTINOUS_MOVEMENT_NEEDED_TIME_PRESSES_FOR_NEXT_MOVEMENT)
+                    _neededTimePresses = InputsConsts.ON_CONTINOUS_MOVEMENT_NEEDED_TIME_PRESSES_FOR_NEXT_MOVEMENT;
             }
         }
         else
         {
-            _neededTimePresses = _normalTimeNeededTimePresses * initWaitPressedTimesFactor;
+            _neededTimePresses = InputsConsts.ON_CONTINOUS_MOVEMENT_NEEDED_TIME_PRESSES_FOR_NEXT_MOVEMENT * initWaitPressedTimesFactor;
             inputAction.Invoke();
             timesPressed = 0;
         }
@@ -144,13 +146,18 @@ public class InputsController : MonoBehaviour
     /// </summary>
     /// <param name="keyCode"> The Key Pressed</param>
     /// <param name="inputAction">The action to execute.</param>
-    private void CheckSingleInput(KeyCode keyCode, Func<bool?> inputAction)
+    private void CheckSingleInput(KeyCode keyCode, Action inputAction)
     {
+
         if (_lastKeyPressed == keyCode)
+        {
+            _lastKeyPressed = keyCode;
             return;
+        }
+
         inputAction.Invoke();
 
-        if(timesPressed!= 0)
+        if (timesPressed != 0)
             timesPressed = 0;
 
         _lastKeyPressed = keyCode;
