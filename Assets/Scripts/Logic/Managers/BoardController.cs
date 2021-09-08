@@ -53,7 +53,9 @@ namespace JiufenGames.TetrisAlike.Logic
                 }
 
             for (int k = 0; k < _piecesTypes.pieces.Length - 1; k++)
-                _listOfNextPieces.Enqueue(_piecesTypes.pieces[Random.Range(0, _piecesTypes.pieces.Length)]);
+                //_listOfNextPieces.Enqueue(_piecesTypes.pieces[Random.Range(0, _piecesTypes.pieces.Length)]);
+                _listOfNextPieces.Enqueue(_piecesTypes.pieces[5]);
+
         }
 
         #endregion
@@ -74,7 +76,8 @@ namespace JiufenGames.TetrisAlike.Logic
             if (_shouldSpawnNewPiece)
             {
                 _currentPiece = _listOfNextPieces.Dequeue();
-                _listOfNextPieces.Enqueue(_piecesTypes.pieces[Random.Range(0, _piecesTypes.pieces.Length)]);
+                //_listOfNextPieces.Enqueue(_piecesTypes.pieces[Random.Range(0, _piecesTypes.pieces.Length)]);
+                _listOfNextPieces.Enqueue(_piecesTypes.pieces[5]);
                 SpawnPiece();
                 _shouldSpawnNewPiece = false;
                 return;
@@ -211,9 +214,9 @@ namespace JiufenGames.TetrisAlike.Logic
             {
                 for (int k = tempCurrentPiecesTiles[j].x - 1; k >= 0; k--)
                 {
-                    if (_board[k, tempCurrentPiecesTiles[j].y]._isFilled && k+1 >= lowestNotFilledTile)
+                    if (_board[k, tempCurrentPiecesTiles[j].y]._isFilled && k + 1 >= lowestNotFilledTile)
                     {
-                        if ((k+1 > lowestNotFilledTile|| tempCurrentPiecesTiles[j].x < lowestRowInCurrentPiece || lowestRowInCurrentPiece == -1))
+                        if ((k + 1 > lowestNotFilledTile || tempCurrentPiecesTiles[j].x < lowestRowInCurrentPiece || lowestRowInCurrentPiece == -1))
                             lowestRowInCurrentPiece = tempCurrentPiecesTiles[j].x;
 
                         lowestNotFilledTile = k + 1;
@@ -247,10 +250,6 @@ namespace JiufenGames.TetrisAlike.Logic
 
         public void RotatePiece(bool clockwise)
         {
-            Vector2Int[] tempCurrentPiecesTiles = new Vector2Int[_currentPieceTiles.Count];
-            _currentPieceTiles.CopyTo(tempCurrentPiecesTiles);
-            _currentPieceTiles = new List<Vector2Int>();
-
             if (clockwise)
             {
                 _currentPieceFormIndex++;
@@ -265,7 +264,13 @@ namespace JiufenGames.TetrisAlike.Logic
 
             }
 
-            //if()
+            _currentPieceTiles = new List<Vector2Int>();
+            ExecuteRotation();
+        }
+
+        private void ExecuteRotation()
+        {
+            Reset4x4Cube();
             for (int i = 3; i >= 0; i--)
             {
                 for (int j = 3; j >= 0; j--)
@@ -274,19 +279,67 @@ namespace JiufenGames.TetrisAlike.Logic
                     int tileColumn = j + _piece4x4CubeStartTile.y;
                     if (_currentPiece.pieceForms[_currentPieceFormIndex].pieceTiles[(3 - i) + (j * PieceForm.PIECE_TILES_WIDTH)])
                     {
+                        if (!CheckIfMovementIsOnSideLimits(tileRow, tileColumn))
+                        {
+                            _currentPieceTiles = new List<Vector2Int>();
+                            Reset4x4Cube();
+                            ExecuteRotation();
+                            return;
+                        }
+
                         if (!_board[tileRow, tileColumn]._isFilled)
                         {
                             _board[tileRow, tileColumn].ChangeColorOfTile(_currentPiece.pieceColor);
                             _currentPieceTiles.Add(new Vector2Int(tileRow, tileColumn));
                         }
                     }
-                    else
+                }
+            }
+        }
+        private void Reset4x4Cube()
+        {
+            for (int i = 3; i >= 0; i--)
+            {
+                for (int j = 3; j >= 0; j--)
+                {
+
+                    int tileRow = i + _piece4x4CubeStartTile.x;
+                    int tileColumn = j + _piece4x4CubeStartTile.y;
+                    if (tileRow >= 0 && tileRow < _totalRows && tileColumn >= 0 && tileColumn < _columns)
                     {
                         if (!_board[tileRow, tileColumn]._isFilled)
                             _board[tileRow, tileColumn].Reset();
                     }
                 }
             }
+
+        }
+        private bool CheckIfMovementIsOnSideLimits(int tileRow, int tileColumn)
+        {
+            bool noOffsetApplied = true;
+            if (tileRow < 0)
+            {
+                _piece4x4CubeStartTile.x++;
+                noOffsetApplied = false;
+            }
+            else if (tileRow > _totalRows - 1)
+            {
+                _piece4x4CubeStartTile.x--;
+                noOffsetApplied = false;
+            }
+
+            if (tileColumn < 0)
+            {
+                _piece4x4CubeStartTile.y++;
+                noOffsetApplied = false;
+            }
+            else if (tileColumn > _columns - 1)
+            {
+                _piece4x4CubeStartTile.y--;
+                noOffsetApplied = false;
+            }
+
+            return noOffsetApplied;
         }
         #endregion
 
