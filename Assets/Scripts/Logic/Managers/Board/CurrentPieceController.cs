@@ -1,138 +1,22 @@
-using JiufenGames.TetrisAlike.Model;
-using System.Collections;
+﻿using JiufenGames.TetrisAlike.Model;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace JiufenGames.TetrisAlike.Logic
 {
-    public class BoardController : MonoBehaviour
+    public class CurrentPieceController
     {
-        #region Variables
-        [Header("Necessary References")]
-        [SerializeField] private Tile _tilePrefab;
-        [SerializeField] private PiecesScriptable _piecesTypes;
-        [SerializeField] private Transform _tileParent;
-
-        [Header("Board Settings")]
-        [SerializeField] private float _offsetTiles = 0.5f;
-        [SerializeField] private int _columns = 10;
-        [SerializeField] private int _realRows = 20;
-        private int _totalRows;
-
-        [HideInInspector] public Tile[,] _board;
-        [HideInInspector] public Piece _currentPiece;
-        [HideInInspector] public bool _shouldSpawnNewPiece = true;
-        private Queue<Piece> _listOfNextPieces = new Queue<Piece>();
-
-        //Gameplay
+        public Piece _currentPiece;
         [HideInInspector] public List<Vector2Int> _currentPieceTiles;
+        public Vector2Int _piece4x4CubeStartTile;
         private int _currentPieceFormIndex = 0;
-        [HideInInspector] public bool userExecutingAction = false;
-        [SerializeField, Range(0, 20)] public float _timeBetweenFalls = 0.01f;
-        private float _timer = 20;
-        private Vector2Int _piece4x4CubeStartTile;
 
-        #endregion
-
-        #region Init
-        void Start()
+        public void OnSpawn()
         {
-            //3 EmptyRows To handle final round pieces.
-            _totalRows = _realRows + 4;
-            _board = new Tile[_totalRows, _columns];
-            for (int i = 0; i < _totalRows; i++)
-                for (int j = 0; j < _columns; j++)
-                {
-                    _board[i, j] = Instantiate(_tilePrefab, new Vector3(j * (1 + _offsetTiles), i * (1 + _offsetTiles), 0), Quaternion.identity, _tileParent);
-                    _board[i, j]._tileRow = i;
-                    _board[i, j]._tileColumn = j;
-                    if (i == _realRows)
-                        _board[i, j].SetFirstHiddenRowPiece();
-                    if (i > _realRows)
-                        _board[i, j].SetPieceToBeHidden();
-                }
-
-            _listOfNextPieces.Enqueue(_piecesTypes.pieces[Random.Range(0, _piecesTypes.pieces.Length)]);
-            //_listOfNextPieces.Enqueue(_piecesTypes.pieces[5]);
-
-        }
-
-        #endregion
-
-        #region GameFlow
-
-        #region Update
-        void Update()
-        {
-            _timer += Time.deltaTime;
-            if (_timer < _timeBetweenFalls)
-                return;
-            if (userExecutingAction)
-                return;
-
-            _timer = 0;
-
-            if (_shouldSpawnNewPiece)
-            {
-                _currentPiece = _listOfNextPieces.Dequeue();
-                _listOfNextPieces.Enqueue(_piecesTypes.pieces[Random.Range(0, _piecesTypes.pieces.Length)]);
-                //_listOfNextPieces.Enqueue(_piecesTypes.pieces[5]);
-                SpawnPiece();
-                _shouldSpawnNewPiece = false;
-                return;
-            }
-
-
-            if (CheckIfPieceIsInFinalPosition())
-            {
-                CheckTileBelow();
-                _timer = _timeBetweenFalls;
-                return;
-            }
-
-            DropPieceTile();
-        }
-
-
-        #endregion
-
-        #region Spawn
-        private void SpawnPiece()
-        {
-            int offset = 0;
-            int highestOffset = 0;
             _currentPieceFormIndex = 0;
-            //Spawn Piece in the upper 4x4 space of the board
-            for (int i = _realRows - 4; i < _realRows; i++)
-            {
-                bool rowFilled = false;
-                for (int j = 3; j <= 6; j++)
-                    if (_board[i, j]._isFilled)
-                        rowFilled = true;
-
-                if (rowFilled)
-                    offset++;
-            }
-
-            _piece4x4CubeStartTile = new Vector2Int(_realRows - 4, 3);
-            for (int i = _realRows - 4; i < _realRows; i++)
-            {
-                for (int j = 3; j <= 6; j++)
-                    if (_currentPiece.pieceForms[_currentPieceFormIndex].pieceTiles[((_realRows - 1) - i) + ((j - 3) * PieceForm.PIECE_TILES_WIDTH)])
-                    {
-                        if (offset > highestOffset)  
-                            _piece4x4CubeStartTile = new Vector2Int(i+offset - 4, 3);
-
-                        _board[i + offset, j].ChangeColorOfTile(_currentPiece.pieceColor);
-                        _currentPieceTiles.Add(new Vector2Int(i + offset, j));
-                    }
-            }
         }
-        #endregion
-
-        #region Verify current Piece
-
-        private bool CheckIfPieceIsInFinalPosition()
+        public bool CheckIfPieceIsInFinalPosition()
         {
             bool pieceFinalPosition = false;
             for (int k = _currentPieceTiles.Count - 1; k >= 0; k--)
@@ -144,7 +28,7 @@ namespace JiufenGames.TetrisAlike.Logic
             return pieceFinalPosition;
         }
 
-        private void CheckTileBelow()
+        public void CheckTileBelow()
         {
             userExecutingAction = true;
             for (int m = _currentPieceTiles.Count - 1; m >= 0; m--)
@@ -168,23 +52,20 @@ namespace JiufenGames.TetrisAlike.Logic
 
         private void CheckIfRowIsFilled(int row)
         {
-            for(int i = 0; i< _columns; i++)
+            for (int i = 0; i < _columns; i++)
                 if (!_board[row, i]._isFilled)
                     return;
         }
 
-        #endregion
-
-        #region Move Piece
-
-        private void DropPieceTile()
+        public void DropPieceTile()
         {
             MovePiecesInSomeDirection(-1, 0);
         }
-        private void Change4x4CubeStartTile(int x, int y)
+        public void Change4x4CubeStartTile(int x, int y)
         {
             _piece4x4CubeStartTile += new Vector2Int(x, y);
         }
+
 
         public bool MovePiecesInSomeDirection(int offsetX, int offsetY)
         {
@@ -364,8 +245,5 @@ namespace JiufenGames.TetrisAlike.Logic
 
             return noOffsetApplied;
         }
-        #endregion
-
-        #endregion
     }
 }
