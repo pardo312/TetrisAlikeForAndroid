@@ -60,7 +60,8 @@ namespace JiufenGames.TetrisAlike.Logic
             else
             {
                 _boardController.HardDropPiece();
-                _needToWaitForNextSpawn = true;
+                if(!_boardController._shouldSpawnNewPiece)
+                    _needToWaitForNextSpawn = true;
             }
             
             _boardController.userExecutingAction = false;

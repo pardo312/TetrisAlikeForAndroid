@@ -35,7 +35,9 @@ namespace JiufenGames.TetrisAlike.Logic
 
         public void Reset()
         {
-            if (!_isPartOfHiddenBoard || !_isPartOfFirstRowAfterRealBoard)
+            if(_isPartOfFirstRowAfterRealBoard)
+                ChangeColorOfTile(Color.clear);
+            else if (!_isPartOfHiddenBoard )
                 ChangeColorOfTile(Consts._defaultColor);
 
             _isFilled = false;

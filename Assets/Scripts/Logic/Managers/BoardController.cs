@@ -52,9 +52,8 @@ namespace JiufenGames.TetrisAlike.Logic
                         _board[i, j].SetPieceToBeHidden();
                 }
 
-            for (int k = 0; k < _piecesTypes.pieces.Length - 1; k++)
-                //_listOfNextPieces.Enqueue(_piecesTypes.pieces[Random.Range(0, _piecesTypes.pieces.Length)]);
-                _listOfNextPieces.Enqueue(_piecesTypes.pieces[5]);
+            _listOfNextPieces.Enqueue(_piecesTypes.pieces[Random.Range(0, _piecesTypes.pieces.Length)]);
+            //_listOfNextPieces.Enqueue(_piecesTypes.pieces[5]);
 
         }
 
@@ -76,8 +75,8 @@ namespace JiufenGames.TetrisAlike.Logic
             if (_shouldSpawnNewPiece)
             {
                 _currentPiece = _listOfNextPieces.Dequeue();
-                //_listOfNextPieces.Enqueue(_piecesTypes.pieces[Random.Range(0, _piecesTypes.pieces.Length)]);
-                _listOfNextPieces.Enqueue(_piecesTypes.pieces[5]);
+                _listOfNextPieces.Enqueue(_piecesTypes.pieces[Random.Range(0, _piecesTypes.pieces.Length)]);
+                //_listOfNextPieces.Enqueue(_piecesTypes.pieces[5]);
                 SpawnPiece();
                 _shouldSpawnNewPiece = false;
                 return;
@@ -87,11 +86,13 @@ namespace JiufenGames.TetrisAlike.Logic
             if (CheckIfPieceIsInFinalPosition())
             {
                 CheckTileBelow();
+                _timer = _timeBetweenFalls;
                 return;
             }
 
             DropPieceTile();
         }
+
 
         #endregion
 
@@ -99,6 +100,7 @@ namespace JiufenGames.TetrisAlike.Logic
         private void SpawnPiece()
         {
             int offset = 0;
+            int highestOffset = 0;
             _currentPieceFormIndex = 0;
             //Spawn Piece in the upper 4x4 space of the board
             for (int i = _realRows - 4; i < _realRows; i++)
@@ -118,6 +120,9 @@ namespace JiufenGames.TetrisAlike.Logic
                 for (int j = 3; j <= 6; j++)
                     if (_currentPiece.pieceForms[_currentPieceFormIndex].pieceTiles[((_realRows - 1) - i) + ((j - 3) * PieceForm.PIECE_TILES_WIDTH)])
                     {
+                        if (offset > highestOffset)  
+                            _piece4x4CubeStartTile = new Vector2Int(i+offset - 4, 3);
+
                         _board[i + offset, j].ChangeColorOfTile(_currentPiece.pieceColor);
                         _currentPieceTiles.Add(new Vector2Int(i + offset, j));
                     }
@@ -132,12 +137,16 @@ namespace JiufenGames.TetrisAlike.Logic
             bool pieceFinalPosition = false;
             for (int k = _currentPieceTiles.Count - 1; k >= 0; k--)
                 if (_currentPieceTiles[k].x == 0 || _board[_currentPieceTiles[k].x - 1, _currentPieceTiles[k].y]._isFilled)
+                {
                     pieceFinalPosition = true;
+                    //CheckIfRowIsFilled(_currentPieceTiles[k].x);
+                }
             return pieceFinalPosition;
         }
 
         private void CheckTileBelow()
         {
+            userExecutingAction = true;
             for (int m = _currentPieceTiles.Count - 1; m >= 0; m--)
             {
                 _board[_currentPieceTiles[m].x, _currentPieceTiles[m].y]._isFilled = true;
@@ -154,7 +163,16 @@ namespace JiufenGames.TetrisAlike.Logic
                 Debug.Log("Endgame");
                 Debug.Break();
             }
+            userExecutingAction = false;
         }
+
+        private void CheckIfRowIsFilled(int row)
+        {
+            for(int i = 0; i< _columns; i++)
+                if (!_board[row, i]._isFilled)
+                    return;
+        }
+
         #endregion
 
         #region Move Piece
@@ -289,6 +307,11 @@ namespace JiufenGames.TetrisAlike.Logic
 
                         if (!_board[tileRow, tileColumn]._isFilled)
                         {
+                            if (tileRow > _realRows - 1)
+                            {
+                                int gb = 0;
+                                gb++;
+                            }
                             _board[tileRow, tileColumn].ChangeColorOfTile(_currentPiece.pieceColor);
                             _currentPieceTiles.Add(new Vector2Int(tileRow, tileColumn));
                         }
