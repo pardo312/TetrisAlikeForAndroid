@@ -73,7 +73,6 @@ namespace JiufenGames.TetrisAlike.Logic
             else
             {
                 _gameplayController.HardDropPiece();
-                Debug.Log("-----HARD DROP------");
                 if (!_gameplayController._shouldSpawnNewPiece)
                     _needToWaitForNextSpawn = true;
             }
