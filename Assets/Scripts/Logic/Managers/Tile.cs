@@ -20,12 +20,12 @@ namespace JiufenGames.TetrisAlike.Logic
         public void Awake()
         {
             _spriteRenderer = GetComponent<SpriteRenderer>();
-            _color = Consts._defaultColor;
+            _color = Consts.DEFAULT_COLOR;
         }
 
         public void ChangeColorOfTile(Color newColor)
         {
-            if (((_isPartOfFirstRowAfterRealBoard || _isPartOfHiddenBoard) && newColor.Equals(Consts._defaultColor)))
+            if (((_isPartOfFirstRowAfterRealBoard || _isPartOfHiddenBoard) && newColor.Equals(Consts.DEFAULT_COLOR)))
                 newColor = Color.clear;
             if (_isPartOfHiddenBoard && !newColor.Equals(Color.clear))
                 return;
@@ -38,7 +38,7 @@ namespace JiufenGames.TetrisAlike.Logic
             if(_isPartOfFirstRowAfterRealBoard)
                 ChangeColorOfTile(Color.clear);
             else if (!_isPartOfHiddenBoard )
-                ChangeColorOfTile(Consts._defaultColor);
+                ChangeColorOfTile(Consts.DEFAULT_COLOR);
 
             _isFilled = false;
         }
