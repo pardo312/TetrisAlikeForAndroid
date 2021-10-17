@@ -1,4 +1,5 @@
 using JiufenGames.TetrisAlike.Model;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -38,6 +39,39 @@ namespace JiufenGames.TetrisAlike.Logic
                         _board[i, j].SetPieceToBeHidden();
                 }
 
+        }
+
+        public void ClearCompletedLine(List<int> filledRows)
+        {
+            for (int i = filledRows.Count - 1; i >= 0; i--)
+            {
+                ResetLine(filledRows[i]);
+                DropUpperLinesOfCurrentLine(filledRows[i]);
+            }
+        }
+
+        private void ResetLine(int row)
+        {
+            for (int i = 0; i < Consts.COLUMNS; i++)
+                _board[row, i].Reset();
+        }
+
+        private void DropUpperLinesOfCurrentLine(int row)
+        {
+            for (int i = row + 1; i < Consts.REAL_ROWS; i++)
+            {
+                DropLine(i);
+                ResetLine(i);
+            }
+        }
+        private void DropLine(int currentLine)
+        {
+            for (int j = 0; j < Consts.COLUMNS; j++)
+            {
+                _board[currentLine - 1, j].ChangeColorOfTile(_board[currentLine, j]._color);
+                if(_board[currentLine, j]._isFilled)
+                    _board[currentLine - 1, j]._isFilled = true;
+            }
         }
 
         #endregion

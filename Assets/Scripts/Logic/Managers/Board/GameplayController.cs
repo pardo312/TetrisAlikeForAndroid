@@ -51,7 +51,11 @@ namespace JiufenGames.TetrisAlike.Logic
             if (_currentPieceController.CheckIfPieceIsInFinalPosition())
             {
                 userExecutingAction = true;
-                _currentPieceController.CheckTileBelow(ref _shouldSpawnNewPiece);
+
+                List<int> filledRows = _currentPieceController.CheckTileBelow(ref _shouldSpawnNewPiece);
+                if (filledRows.Count > 0)
+                    _boardController.ClearCompletedLine(filledRows);
+
                 userExecutingAction = false;
 
                 _timer = _timeBetweenFalls;
@@ -79,12 +83,12 @@ namespace JiufenGames.TetrisAlike.Logic
             _currentPieceController.HardDropPiece();
         }
 
-        public  void MovePiecesInSomeDirection(int x, int y)
+        public void MovePiecesInSomeDirection(int x, int y)
         {
-            _currentPieceController.MovePiecesInSomeDirection(x,y);
+            _currentPieceController.MovePiecesInSomeDirection(x, y);
         }
 
-        public  void RotatePiece(bool clockwise)
+        public void RotatePiece(bool clockwise)
         {
             _currentPieceController.RotatePiece(clockwise);
         }

@@ -44,16 +44,25 @@ namespace JiufenGames.TetrisAlike.Logic
         }
 
 
-        public void CheckTileBelow(ref bool _shouldSpawnNewPiece)
+
+        /// <summary>
+        /// When the current piece drops to the lowest possition, check if the tile bellow is inside te tetris board. If not end the game
+        /// </summary>
+        /// <param name="_shouldSpawnNewPiece"></param>
+        /// <returns>Filled rows</returns>
+        public List<int> CheckTileBelow(ref bool _shouldSpawnNewPiece)
         {
+            List<int> filledRows = new List<int>();
             for (int m = _currentPieceTiles.Count - 1; m >= 0; m--)
             {
                 _boardController._board[_currentPieceTiles[m].x, _currentPieceTiles[m].y]._isFilled = true;
 
                 if (_currentPieceTiles[m].x < Consts.REAL_ROWS - 2)
-                {
                     _shouldSpawnNewPiece = true;
-                }
+
+                if (!filledRows.Contains(_currentPieceTiles[m].x))
+                    if (CheckIfRowIsFilled(_currentPieceTiles[m].x))
+                        filledRows.Add(_currentPieceTiles[m].x);
             }
             _currentPieceTiles = new List<Vector2Int>();
 
@@ -62,13 +71,17 @@ namespace JiufenGames.TetrisAlike.Logic
                 Debug.Log("Endgame");
                 Debug.Break();
             }
+            return filledRows;
         }
 
-        private void CheckIfRowIsFilled(int row)
+
+        private bool CheckIfRowIsFilled(int row)
         {
+            bool isAllColumnsFilled = true;
             for (int i = 0; i < Consts.COLUMNS; i++)
                 if (!_boardController._board[row, i]._isFilled)
-                    return;
+                    isAllColumnsFilled = false;
+            return isAllColumnsFilled;
         }
 
         public void DropPieceTile()
@@ -85,7 +98,6 @@ namespace JiufenGames.TetrisAlike.Logic
         {
             // All this method O(4*3) = O(12) because the currentPiecesTiles can only be an array of length 4.
             // Constant O
-           Debug.Log($"Piece: {pieceNumber} Current Piece Tiles: {JsonConvert.SerializeObject(_currentPieceTiles,Formatting.Indented)}");
 
             Vector2Int[] tempCurrentPiecesTiles = new Vector2Int[_currentPieceTiles.Count];
             _currentPieceTiles.CopyTo(tempCurrentPiecesTiles);
