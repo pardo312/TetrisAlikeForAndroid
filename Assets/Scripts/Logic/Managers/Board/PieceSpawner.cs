@@ -6,7 +6,7 @@ using Random = UnityEngine.Random;
 
 namespace JiufenGames.TetrisAlike.Logic
 {
-    public class PieceSpawner
+    public class PieceSpawner: MonoBehaviour
     {
         private Queue<Piece> _listOfNextPieces = new Queue<Piece>();
         [SerializeField] private PiecesScriptable _piecesTypes;

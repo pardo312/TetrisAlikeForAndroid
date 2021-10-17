@@ -1,4 +1,5 @@
 ﻿using JiufenGames.TetrisAlike.Model;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,7 +10,7 @@ namespace JiufenGames.TetrisAlike.Logic
     {
         [Header("Controllers")]
         [SerializeField] BoardController _boardController;
-        [SerializeField] CurrentPieceController _currentPieceController;
+        [SerializeField] CurrentPieceController _currentPieceController = new CurrentPieceController();
 
         [Header("PieceSpawn")]
         [HideInInspector] public bool _shouldSpawnNewPiece = true;
@@ -24,6 +25,7 @@ namespace JiufenGames.TetrisAlike.Logic
         {
             _boardController.Init();
             _pieceSpawner.Init();
+            _currentPieceController.Init(_boardController);
         }
         void Update()
         {
@@ -45,7 +47,10 @@ namespace JiufenGames.TetrisAlike.Logic
 
             if (_currentPieceController.CheckIfPieceIsInFinalPosition())
             {
-                _currentPieceController.CheckTileBelow();
+                userExecutingAction = true;
+                _currentPieceController.CheckTileBelow(ref _shouldSpawnNewPiece);
+                userExecutingAction = false;
+
                 _timer = _timeBetweenFalls;
                 return;
             }
@@ -54,7 +59,7 @@ namespace JiufenGames.TetrisAlike.Logic
         }
         private void SpawnPiece()
         {
-            _pieceSpawner.SpawnPiece(_boardController._realRows, _boardController._board, (currentPiece, piece4x4SquareTiles, currentPieceTiles) =>
+            _pieceSpawner.SpawnPiece(Consts.REAL_ROWS, _boardController._board, (currentPiece, piece4x4SquareTiles, currentPieceTiles) =>
               {
                   _currentPieceController._currentPiece = currentPiece;
                   _currentPieceController._piece4x4CubeStartTile = piece4x4SquareTiles;
@@ -64,5 +69,19 @@ namespace JiufenGames.TetrisAlike.Logic
 
         }
 
+        internal void HardDropPiece()
+        {
+            _currentPieceController.HardDropPiece();
+        }
+
+        internal void MovePiecesInSomeDirection(int x, int y)
+        {
+            _currentPieceController.MovePiecesInSomeDirection(x,y);
+        }
+
+        internal void RotatePiece(bool clockwise)
+        {
+            _currentPieceController.RotatePiece(clockwise);
+        }
     }
 }
