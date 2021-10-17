@@ -1,4 +1,5 @@
 ﻿using JiufenGames.TetrisAlike.Model;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,10 +21,14 @@ namespace JiufenGames.TetrisAlike.Logic
         public void Init(BoardController boardController)
         {
             _boardController = boardController;
-
         }
+        //TEST
+        private int pieceNumber = 0;
+
+        //EndTEST
         public void OnSpawn()
         {
+            pieceNumber++;
             _currentPieceFormIndex = 0;
         }
         public bool CheckIfPieceIsInFinalPosition()
@@ -80,6 +85,7 @@ namespace JiufenGames.TetrisAlike.Logic
         {
             // All this method O(4*3) = O(12) because the currentPiecesTiles can only be an array of length 4.
             // Constant O
+           Debug.Log($"Piece: {pieceNumber} Current Piece Tiles: {JsonConvert.SerializeObject(_currentPieceTiles,Formatting.Indented)}");
 
             Vector2Int[] tempCurrentPiecesTiles = new Vector2Int[_currentPieceTiles.Count];
             _currentPieceTiles.CopyTo(tempCurrentPiecesTiles);

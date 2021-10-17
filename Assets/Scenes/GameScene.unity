@@ -448,7 +448,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1483877067}
   - component: {fileID: 1483877066}
-  - component: {fileID: 1483877068}
   m_Layer: 0
   m_Name: BoardManager
   m_TagString: Untagged
@@ -485,19 +484,6 @@ Transform:
   m_Father: {fileID: 1725523635}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1483877068
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1483877065}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 77f39c6e7e655eb4dbea83a0aba2e6dd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _gameplayController: {fileID: 1725523634}
 --- !u!1 &1602509454
 GameObject:
   m_ObjectHideFlags: 0

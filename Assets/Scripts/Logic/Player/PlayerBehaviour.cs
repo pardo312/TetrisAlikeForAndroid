@@ -5,39 +5,52 @@ using UnityEngine;
 
 namespace JiufenGames.TetrisAlike.Logic
 {
-    public class PlayerBehaviour : MonoBehaviour
+    public class PlayerBehaviour
     {
         #region Variables
-        [SerializeField] private GameplayController _gameplayController;
+        private GameplayController _gameplayController;
         private bool _needToWaitForNextSpawn = false;
         #endregion
 
         #region Init
-        void Start()
+        public void Init(GameplayController gameplayController)
         {
-            if (_gameplayController == null)
-                _gameplayController = GetComponent<GameplayController>();
+            _gameplayController = gameplayController;
+            InputsController._instance._initialTimeBetweenInputs = gameplayController._timeBetweenFalls * 0.5f;
 
-            InputsController._instance._initialTimeBetweenInputs = _gameplayController._timeBetweenFalls * 0.5f;
+            DesuscribreInputsEvents();
+            SuscribeInputEvents();
+
+        }
+        private void DesuscribreInputsEvents()
+        {
+            InputsController._instance._OnMovePiece -= MovePiece;
+            InputsController._instance._OnDropPiece -= DropPiece;
+            InputsController._instance._OnRotatePiece -= RotatePiece;
+            InputsController._instance._OnStorePiece -= StorePiece;
+        }
+        private void SuscribeInputEvents()
+        {
             InputsController._instance._OnMovePiece += MovePiece;
             InputsController._instance._OnDropPiece += DropPiece;
             InputsController._instance._OnRotatePiece += RotatePiece;
             InputsController._instance._OnStorePiece += StorePiece;
-
         }
         #endregion
 
-        private void Update()
+        public void NeedToWaitForNextSpawn()
         {
-            // Check if the nextPiece has spawned
-            if (_needToWaitForNextSpawn )
-                _needToWaitForNextSpawn  = !_gameplayController._shouldSpawnNewPiece;
+            if (_needToWaitForNextSpawn)
+            {
+                _needToWaitForNextSpawn = _gameplayController._shouldSpawnNewPiece;
+            }
         }
 
         private void MovePiece(bool toLeft)
         {
             if (_needToWaitForNextSpawn)
                 return;
+
             _gameplayController.userExecutingAction = true;
 
             int direction = 1;
@@ -45,7 +58,7 @@ namespace JiufenGames.TetrisAlike.Logic
                 direction = -1;
 
             _gameplayController.MovePiecesInSomeDirection(0, direction);
-            
+
             _gameplayController.userExecutingAction = false;
         }
 
@@ -56,14 +69,15 @@ namespace JiufenGames.TetrisAlike.Logic
 
             _gameplayController.userExecutingAction = true;
             if (softDrop)
-                _gameplayController.MovePiecesInSomeDirection(-1,0);
+                _gameplayController.MovePiecesInSomeDirection(-1, 0);
             else
             {
                 _gameplayController.HardDropPiece();
-                if(!_gameplayController._shouldSpawnNewPiece)
+                Debug.Log("-----HARD DROP------");
+                if (!_gameplayController._shouldSpawnNewPiece)
                     _needToWaitForNextSpawn = true;
             }
-            
+
             _gameplayController.userExecutingAction = false;
         }
 
@@ -79,8 +93,10 @@ namespace JiufenGames.TetrisAlike.Logic
 
         private void StorePiece()
         {
+          
             if (_needToWaitForNextSpawn)
                 return;
+
             return;
         }
 

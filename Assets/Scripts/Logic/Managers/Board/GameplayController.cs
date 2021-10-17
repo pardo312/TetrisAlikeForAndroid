@@ -11,6 +11,7 @@ namespace JiufenGames.TetrisAlike.Logic
         [Header("Controllers")]
         [SerializeField] BoardController _boardController;
         [SerializeField] CurrentPieceController _currentPieceController = new CurrentPieceController();
+        [SerializeField] PlayerBehaviour _playerBehaviour = new PlayerBehaviour();
 
         [Header("PieceSpawn")]
         [HideInInspector] public bool _shouldSpawnNewPiece = true;
@@ -26,7 +27,9 @@ namespace JiufenGames.TetrisAlike.Logic
             _boardController.Init();
             _pieceSpawner.Init();
             _currentPieceController.Init(_boardController);
+            _playerBehaviour.Init(this);
         }
+
         void Update()
         {
             _timer += Time.deltaTime;
@@ -56,7 +59,9 @@ namespace JiufenGames.TetrisAlike.Logic
             }
 
             _currentPieceController.DropPieceTile();
+            _playerBehaviour.NeedToWaitForNextSpawn();
         }
+
         private void SpawnPiece()
         {
             _pieceSpawner.SpawnPiece(Consts.REAL_ROWS, _boardController._board, (currentPiece, piece4x4SquareTiles, currentPieceTiles) =>
@@ -69,17 +74,17 @@ namespace JiufenGames.TetrisAlike.Logic
 
         }
 
-        internal void HardDropPiece()
+        public void HardDropPiece()
         {
             _currentPieceController.HardDropPiece();
         }
 
-        internal void MovePiecesInSomeDirection(int x, int y)
+        public  void MovePiecesInSomeDirection(int x, int y)
         {
             _currentPieceController.MovePiecesInSomeDirection(x,y);
         }
 
-        internal void RotatePiece(bool clockwise)
+        public  void RotatePiece(bool clockwise)
         {
             _currentPieceController.RotatePiece(clockwise);
         }
