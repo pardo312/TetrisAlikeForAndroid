@@ -39,7 +39,7 @@ public class InputsController : MonoBehaviour
     public Action _OnStorePiece;
 
     // KeyPressed Record
-    private KeyCode _lastKeyPressed = KeyCode.None;
+    private List<KeyCode> _lastKeyPressed = new List<KeyCode>();
     private int timesPressed = 0;
 
     //Input timing
@@ -60,55 +60,51 @@ public class InputsController : MonoBehaviour
     public void HandleInputs()
     {
         // Movement of piece
-        if (Input.GetKey(_inputsConfig._moveLeft))
-            CheckContinuousInput(
+        CheckIfIsPressingKey(_inputsConfig._moveLeft,
+            () => CheckContinuousInput(
                 _inputsConfig._moveLeft,
                 InputsConsts.INITIAL_NEEDED_TIMES_PRESSED,
                 () => _OnMovePiece?.Invoke(true)
-            );
-        else if (Input.GetKey(_inputsConfig._moveRight))
-            CheckContinuousInput(
+            ));
+        CheckIfIsPressingKey(_inputsConfig._moveRight,
+            () => CheckContinuousInput(
                 _inputsConfig._moveRight,
                 InputsConsts.INITIAL_NEEDED_TIMES_PRESSED,
                 () => _OnMovePiece?.Invoke(false)
-            );
+            ));
         // Dropping piece
-        else if (Input.GetKey(_inputsConfig._softDrop))
-            CheckContinuousInput(
+        CheckIfIsPressingKey(_inputsConfig._softDrop,
+            () => CheckContinuousInput(
                 _inputsConfig._softDrop,
                 InputsConsts.INITIAL_NEEDED_TIMES_PRESSED,
                 () => _OnDropPiece?.Invoke(true)
-            );
-        // Hard Dropping piece
-        else if (Input.GetKey(_inputsConfig._hardDrop))
-            CheckSingleInput(
+            ));
+        CheckIfIsPressingKey(_inputsConfig._hardDrop,
+            () => CheckSingleInput(
                 _inputsConfig._hardDrop,
                 () => _OnDropPiece?.Invoke(false)
-            );
+            ));
         // Rotating Pieces
-        else if (Input.GetKey(_inputsConfig._rotateClockwise))
-
-            CheckSingleInput(
+        CheckIfIsPressingKey(_inputsConfig._rotateClockwise,
+            () => CheckSingleInput(
                 _inputsConfig._rotateClockwise,
                 () => _OnRotatePiece?.Invoke(true)
-            );
-        else if (Input.GetKey(_inputsConfig._rotateCounterClockwise))
-            CheckSingleInput(
+            ));
+        CheckIfIsPressingKey(_inputsConfig._rotateCounterClockwise,
+            () => CheckSingleInput(
                 _inputsConfig._rotateCounterClockwise,
                 () => _OnRotatePiece?.Invoke(false)
-            );
+            ));
         //No key Pressed
-        else
+        if (Input.GetKey(KeyCode.None))
         {
             timesPressed = 0;
-            _lastKeyPressed = KeyCode.None;
+            _lastKeyPressed = new List<KeyCode>();
         }
-
 
         ////Storing Pieces
         //if (Input.GetKey(_inputsConfig._storePiece))
         //   userDidInput = _OnStorePiece?.Invoke() == true;
-
     }
 
     /// <summary>
@@ -120,12 +116,12 @@ public class InputsController : MonoBehaviour
     /// <param name="inputAction">The action to execute.</param>
     private void CheckContinuousInput(KeyCode keyCode, int initWaitPressedTimesFactor, Action inputAction)
     {
-        if (_lastKeyPressed == keyCode)
+        if (_lastKeyPressed.Contains(keyCode))
         {
             timesPressed++;
             if (timesPressed > _neededTimePresses)
             {
-                inputAction.Invoke();
+                inputAction?.Invoke();
                 timesPressed = 0;
                 if (_neededTimePresses != InputsConsts.ON_CONTINOUS_MOVEMENT_NEEDED_TIME_PRESSES_FOR_NEXT_MOVEMENT)
                     _neededTimePresses = InputsConsts.ON_CONTINOUS_MOVEMENT_NEEDED_TIME_PRESSES_FOR_NEXT_MOVEMENT;
@@ -134,11 +130,12 @@ public class InputsController : MonoBehaviour
         else
         {
             _neededTimePresses = InputsConsts.ON_CONTINOUS_MOVEMENT_NEEDED_TIME_PRESSES_FOR_NEXT_MOVEMENT * initWaitPressedTimesFactor;
-            inputAction.Invoke();
+            inputAction?.Invoke();
             timesPressed = 0;
         }
 
-        _lastKeyPressed = keyCode;
+        if (!_lastKeyPressed.Contains(keyCode))
+            _lastKeyPressed.Add(keyCode);
     }
 
     /// <summary>
@@ -149,18 +146,24 @@ public class InputsController : MonoBehaviour
     private void CheckSingleInput(KeyCode keyCode, Action inputAction)
     {
 
-        if (_lastKeyPressed == keyCode)
-        {
-            _lastKeyPressed = keyCode;
+        if (_lastKeyPressed.Contains(keyCode))
             return;
-        }
 
-        inputAction.Invoke();
+        inputAction?.Invoke();
 
         if (timesPressed != 0)
             timesPressed = 0;
 
-        _lastKeyPressed = keyCode;
+        if (!_lastKeyPressed.Contains(keyCode))
+            _lastKeyPressed.Add(keyCode);
+    }
+
+    private void CheckIfIsPressingKey(KeyCode keycode, Action inputCheck)
+    {
+        if (Input.GetKey(keycode))
+            inputCheck?.Invoke();
+        else if (_lastKeyPressed.Contains(keycode))
+            _lastKeyPressed.Remove(keycode);
     }
     #endregion
 }

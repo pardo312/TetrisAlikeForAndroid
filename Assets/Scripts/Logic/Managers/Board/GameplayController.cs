@@ -40,13 +40,17 @@ namespace JiufenGames.TetrisAlike.Logic
 
             _timer = 0;
 
+
             if (_shouldSpawnNewPiece)
             {
                 SpawnPiece();
                 _shouldSpawnNewPiece = false;
-                return;
             }
-
+            else
+            {
+                //If it isn't spawing drop the 
+                _currentPieceController.DropPieceTile();
+            }
 
             if (_currentPieceController.CheckIfPieceIsInFinalPosition())
             {
@@ -62,7 +66,6 @@ namespace JiufenGames.TetrisAlike.Logic
                 return;
             }
 
-            _currentPieceController.DropPieceTile();
             _playerBehaviour.NeedToWaitForNextSpawn();
         }
 
