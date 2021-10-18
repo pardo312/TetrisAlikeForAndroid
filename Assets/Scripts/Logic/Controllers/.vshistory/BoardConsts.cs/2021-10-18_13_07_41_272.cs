@@ -2,7 +2,7 @@
 
 namespace JiufenGames.TetrisAlike.Logic
 {
-    public class Consts
+    public class BoardConsts
     {
         public static readonly Color DEFAULT_COLOR = new Color(0.086f, 0.086f, 0.086f, 1);
 
