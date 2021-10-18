@@ -60,7 +60,7 @@ public class TetrisPiecesModifier : EditorWindow
 
 
 
-    [MenuItem("Geta/Platform Models Tests")]
+    [MenuItem("Tetris/PiecesFormAndRotations")]
     public static void ShowWindow()
     {
         GetWindow<TetrisPiecesModifier>(false, "WindowTest", true);

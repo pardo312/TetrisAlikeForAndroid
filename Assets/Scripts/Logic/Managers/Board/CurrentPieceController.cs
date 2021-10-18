@@ -60,9 +60,7 @@ namespace JiufenGames.TetrisAlike.Logic
                 if (_currentPieceTiles[m].x < Consts.REAL_ROWS - 2)
                     _shouldSpawnNewPiece = true;
 
-                if (!filledRows.Contains(_currentPieceTiles[m].x))
-                    if (CheckIfRowIsFilled(_currentPieceTiles[m].x))
-                        filledRows.Add(_currentPieceTiles[m].x);
+                filledRows = CheckIfAnyRowIsFilled();
             }
             _currentPieceTiles = new List<Vector2Int>();
 
@@ -75,13 +73,23 @@ namespace JiufenGames.TetrisAlike.Logic
         }
 
 
-        private bool CheckIfRowIsFilled(int row)
+        private List<int> CheckIfAnyRowIsFilled()
         {
-            bool isAllColumnsFilled = true;
-            for (int i = 0; i < Consts.COLUMNS; i++)
-                if (!_boardController._board[row, i]._isFilled)
-                    isAllColumnsFilled = false;
-            return isAllColumnsFilled;
+            List<int> filledRows = new List<int>();
+            bool currentRowFilled = true;
+            for (int i = 0; i < Consts.REAL_ROWS; i++)
+            {
+                currentRowFilled = true;
+                for (int j = 0; j < Consts.COLUMNS; j++)
+                {
+                    if (!_boardController._board[i, j]._isFilled)
+                        currentRowFilled = false;
+                }
+
+                if (currentRowFilled)
+                    filledRows.Add(i);
+            }
+            return filledRows;
         }
 
         public void DropPieceTile()
@@ -192,6 +200,13 @@ namespace JiufenGames.TetrisAlike.Logic
 
             _currentPieceTiles = new List<Vector2Int>();
             ExecuteRotation();
+            PaintCurrentPieces();
+        }
+
+        private void PaintCurrentPieces()
+        {
+            for (int j = 0; j < _currentPieceTiles.Count; j++)
+                _boardController._board[_currentPieceTiles[j].x, _currentPieceTiles[j].y].ChangeColorOfTile(_currentPiece.pieceColor);
         }
 
         private void ExecuteRotation()
@@ -207,26 +222,33 @@ namespace JiufenGames.TetrisAlike.Logic
                     {
                         if (!CheckIfMovementIsOnSideLimits(tileRow, tileColumn))
                         {
-                            _currentPieceTiles = new List<Vector2Int>();
-                            Reset4x4Cube();
-                            ExecuteRotation();
+                            ResetPieceBeforRotation();
                             return;
                         }
 
-                        if (!_boardController._board[tileRow, tileColumn]._isFilled)
+                        if (_boardController._board[tileRow, tileColumn]._isFilled)
                         {
-                            if (tileRow > Consts.REAL_ROWS - 1)
-                            {
-                                int gb = 0;
-                                gb++;
-                            }
-                            _boardController._board[tileRow, tileColumn].ChangeColorOfTile(_currentPiece.pieceColor);
-                            _currentPieceTiles.Add(new Vector2Int(tileRow, tileColumn));
+                            //If any of the tiles collide with a filled tile after the rotation, put the piece one row above the current.
+                            _piece4x4CubeStartTile += new Vector2Int(1, 0);
+                            ResetPieceBeforRotation();
+                            return;
                         }
+                        _currentPieceTiles.Add(new Vector2Int(tileRow, tileColumn));
                     }
                 }
             }
         }
+
+        /// <summary>
+        /// Reset the piece befor executing the rotation again
+        /// </summary>
+        private void ResetPieceBeforRotation()
+        {
+            _currentPieceTiles = new List<Vector2Int>();
+            Reset4x4Cube();
+            ExecuteRotation();
+        }
+
         private void Reset4x4Cube()
         {
             for (int i = 3; i >= 0; i--)
