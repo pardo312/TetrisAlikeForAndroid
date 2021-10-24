@@ -16,7 +16,7 @@ namespace JiufenGames.TetrisAlike.Logic
         public void Init(GameplayController gameplayController)
         {
             _gameplayController = gameplayController;
-            InputsController._instance._initialTimeBetweenInputs = gameplayController._timeBetweenFalls * 0.5f;
+            InputsController._instance._initialTimeBetweenInputs = gameplayController.m_timeBetweenFalls * 0.5f;
 
             DesuscribreInputsEvents();
             SuscribeInputEvents();
@@ -42,7 +42,7 @@ namespace JiufenGames.TetrisAlike.Logic
         {
             if (_needToWaitForNextSpawn)
             {
-                _needToWaitForNextSpawn = _gameplayController._shouldSpawnNewPiece;
+                _needToWaitForNextSpawn = _gameplayController.m_shouldSpawnNewPiece;
             }
         }
 
@@ -51,7 +51,7 @@ namespace JiufenGames.TetrisAlike.Logic
             if (_needToWaitForNextSpawn)
                 return;
 
-            _gameplayController.userExecutingAction = true;
+            _gameplayController.m_userExecutingAction = true;
 
             int direction = 1;
             if (toLeft)
@@ -59,7 +59,7 @@ namespace JiufenGames.TetrisAlike.Logic
 
             _gameplayController.MovePiecesInSomeDirection(0, direction);
 
-            _gameplayController.userExecutingAction = false;
+            _gameplayController.m_userExecutingAction = false;
         }
 
         private void DropPiece(bool softDrop)
@@ -67,17 +67,17 @@ namespace JiufenGames.TetrisAlike.Logic
             if (_needToWaitForNextSpawn)
                 return;
 
-            _gameplayController.userExecutingAction = true;
+            _gameplayController.m_userExecutingAction = true;
             if (softDrop)
                 _gameplayController.MovePiecesInSomeDirection(-1, 0);
             else
             {
                 _gameplayController.HardDropPiece();
-                if (!_gameplayController._shouldSpawnNewPiece)
+                if (!_gameplayController.m_shouldSpawnNewPiece)
                     _needToWaitForNextSpawn = true;
             }
 
-            _gameplayController.userExecutingAction = false;
+            _gameplayController.m_userExecutingAction = false;
         }
 
         private void RotatePiece(bool clockwise)
@@ -85,9 +85,9 @@ namespace JiufenGames.TetrisAlike.Logic
             if (_needToWaitForNextSpawn)
                 return;
 
-            _gameplayController.userExecutingAction = true;
+            _gameplayController.m_userExecutingAction = true;
             _gameplayController.RotatePiece(clockwise);
-            _gameplayController.userExecutingAction = false;
+            _gameplayController.m_userExecutingAction = false;
         }
 
         private void StorePiece()

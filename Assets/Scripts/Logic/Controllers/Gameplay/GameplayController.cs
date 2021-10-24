@@ -1,4 +1,5 @@
-﻿using JiufenGames.TetrisAlike.Model;
+﻿using Jiufen.Audio;
+using JiufenGames.TetrisAlike.Model;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,94 +10,103 @@ namespace JiufenGames.TetrisAlike.Logic
     public class GameplayController : MonoBehaviour
     {
         [Header("Controllers")]
-        [SerializeField] BoardController _boardController;
-        [SerializeField]ScoreController _scoreController;
-        CurrentPieceController _currentPieceController = new CurrentPieceController();
-        PlayerBehaviour _playerBehaviour = new PlayerBehaviour();
+        //Board
+        [SerializeField] BoardController m_boardController;
+        //Piece
+        [SerializeField] NextPieceController m_nextPieceController;
+        CurrentPieceController m_currentPieceController = new CurrentPieceController();
+        //Other
+        PlayerBehaviour m_playerBehaviour = new PlayerBehaviour();
+        [SerializeField] ScoreController m_scoreController;
 
         [Header("PieceSpawn")]
-        [HideInInspector] public bool _shouldSpawnNewPiece = true;
-        public PieceSpawner _pieceSpawner = new PieceSpawner();
+        [HideInInspector] public bool m_shouldSpawnNewPiece = true;
+        public PieceSpawner m_pieceSpawner = new PieceSpawner();
 
         [Header("Gameplay")]
-        [HideInInspector] public bool userExecutingAction = false;
-        [SerializeField, Range(0, 20)] public float _timeBetweenFalls = 0.01f;
-        private float _timer = 20;
+        [HideInInspector] public bool m_userExecutingAction = false;
+        [SerializeField, Range(0, 20)] public float m_timeBetweenFalls = 0.01f;
+        private float m_timer = 20;
 
         public void Start()
         {
-            _boardController.Init();
-            _pieceSpawner.Init();
-            _currentPieceController.Init(_boardController);
-            _playerBehaviour.Init(this);
-            _scoreController.Init();
+            m_boardController.Init();
+            m_pieceSpawner.Init();
+            m_currentPieceController.Init(m_boardController);
+            m_playerBehaviour.Init(this);
+            m_scoreController.Init();
+            m_nextPieceController.Init();
+
+            AudioManager.PlayAudio("OST_MAIN_THEME", new AudioJobOptions(null, null, true));
         }
 
         void Update()
         {
-            _timer += Time.deltaTime;
-            if (_timer < _timeBetweenFalls)
+            m_timer += Time.deltaTime;
+            if (m_timer < m_timeBetweenFalls)
                 return;
-            if (userExecutingAction)
+            if (m_userExecutingAction)
                 return;
 
-            _timer = 0;
+            m_timer = 0;
 
-            if (_shouldSpawnNewPiece)
+            if (m_shouldSpawnNewPiece)
             {
                 SpawnPiece();
-                _shouldSpawnNewPiece = false;
+                m_shouldSpawnNewPiece = false;
             }
-            else if (_currentPieceController.CheckIfPieceIsInFinalPosition())
+            else if (m_currentPieceController.CheckIfPieceIsInFinalPosition())
             {
+                m_userExecutingAction = true;
 
-                userExecutingAction = true;
-
-                List<int> filledRows = _currentPieceController.CheckTileBelow(ref _shouldSpawnNewPiece);
+                List<int> filledRows = m_currentPieceController.CheckTileBelow(ref m_shouldSpawnNewPiece);
                 if (filledRows.Count > 0)
                 {
-                    _boardController.ClearCompletedLine(filledRows);
-                    _scoreController.CleanLineAddScore(filledRows.Count);
+                    m_boardController.ClearCompletedLine(filledRows);
+                    m_scoreController.CleanLineAddScore(filledRows.Count);
                 }
 
-                userExecutingAction = false;
+                m_userExecutingAction = false;
 
-                _timer = _timeBetweenFalls;
+                m_timer = m_timeBetweenFalls;
             }
             else
             {
                 //If it isn't spawing or in final position drop the piece.
-                _currentPieceController.DropPieceTile();
+                m_currentPieceController.DropPieceTile();
             }
-            _playerBehaviour.NeedToWaitForNextSpawn();
+            m_playerBehaviour.NeedToWaitForNextSpawn();
 
         }
 
         private void SpawnPiece()
         {
-            _pieceSpawner.SpawnPiece(BoardConsts.REAL_ROWS, _boardController._board, (currentPiece, piece4x4SquareTiles, currentPieceTiles) =>
-              {
-                  _currentPieceController._currentPiece = currentPiece;
-                  _currentPieceController._piece4x4CubeStartTile = piece4x4SquareTiles;
-                  _currentPieceController._currentPieceTiles = currentPieceTiles;
-              });
-            _currentPieceController.OnSpawn();
+            m_pieceSpawner.SpawnPiece(BoardConsts.REAL_ROWS, m_boardController._board, m_nextPieceController.GetNextPiece(),
+               (currentPiece, piece4x4SquareTiles, currentPieceTiles) =>
+               {
+                   m_currentPieceController._currentPiece = currentPiece;
+                   m_currentPieceController._piece4x4CubeStartTile = piece4x4SquareTiles;
+                   m_currentPieceController._currentPieceTiles = currentPieceTiles;
+               });
+
+            m_nextPieceController.ShowNextPiece();
+            m_currentPieceController.OnSpawn();
 
         }
 
         public void HardDropPiece()
         {
-            _currentPieceController.HardDropPiece();
+            m_currentPieceController.HardDropPiece();
         }
 
         public void MovePiecesInSomeDirection(int x, int y)
         {
-            _currentPieceController.MovePiecesInSomeDirection(x, y);
+            m_currentPieceController.MovePiecesInSomeDirection(x, y);
         }
 
         public void RotatePiece(bool clockwise)
         {
-            _currentPieceController.RotatePiece(clockwise);
+            m_currentPieceController.RotatePiece(clockwise);
         }
     }
 }

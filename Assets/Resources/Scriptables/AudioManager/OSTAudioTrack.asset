@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1245907513, guid: 6180284692d36a54abbceae3c97fc71d, type: 3}
+  m_Name: OSTAudioTrack
+  m_EditorClassIdentifier: 
+  audioSource: {fileID: 0}
+  audioObjects:
+  - key: OST_MAIN_THEME
+    audioClip: {fileID: 8300000, guid: 5c2ec16295a1cc246bab77a6d6e1a96b, type: 3}

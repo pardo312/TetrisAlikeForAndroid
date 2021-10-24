@@ -6,20 +6,16 @@ using Random = UnityEngine.Random;
 
 namespace JiufenGames.TetrisAlike.Logic
 {
-    public class PieceSpawner: MonoBehaviour
+    public class PieceSpawner
     {
-        private Queue<Piece> _listOfNextPieces = new Queue<Piece>();
-        [SerializeField] private PiecesScriptable _piecesTypes;
         public void Init()
         {
-            _listOfNextPieces.Enqueue(_piecesTypes.pieces[Random.Range(0, _piecesTypes.pieces.Length)]);
+            //InitializePieceSpawner
         }
 
-        public void SpawnPiece(int _realRows, Tile[,] _board, Action<Piece, Vector2Int, List<Vector2Int>> callback = null)
+        public void SpawnPiece(int _realRows, Tile[,] _board, Piece _nextPiece,Action<Piece, Vector2Int, List<Vector2Int>> callback = null)
         {
             List<Vector2Int> currentPieceTiles = new List<Vector2Int>();
-            Piece currentPiece = _listOfNextPieces.Dequeue();
-            _listOfNextPieces.Enqueue(_piecesTypes.pieces[Random.Range(0, _piecesTypes.pieces.Length)]);
 
             int offset = 0;
             int highestOffset = 0;
@@ -39,16 +35,16 @@ namespace JiufenGames.TetrisAlike.Logic
             for (int i = _realRows - 4; i < _realRows; i++)
             {
                 for (int j = 3; j <= 6; j++)
-                    if (currentPiece.pieceForms[0].pieceTiles[((_realRows - 1) - i) + ((j - 3) * PieceForm.PIECE_TILES_WIDTH)])
+                    if (_nextPiece.pieceForms[0].pieceTiles[((_realRows - 1) - i) + ((j - 3) * PieceForm.PIECE_TILES_WIDTH)])
                     {
                         if (offset > highestOffset)
                             piece4x4SquareTiles = new Vector2Int(i + offset - 4, 3);
 
-                        _board[i + offset, j].ChangeColorOfTile(currentPiece.pieceColor);
+                        _board[i + offset, j].ChangeColorOfTile(_nextPiece.pieceColor);
                         currentPieceTiles.Add(new Vector2Int(i + offset, j));
                     }
             }
-            callback?.Invoke(currentPiece, piece4x4SquareTiles, currentPieceTiles);
+            callback?.Invoke(_nextPiece, piece4x4SquareTiles, currentPieceTiles);
         }
     }
 }

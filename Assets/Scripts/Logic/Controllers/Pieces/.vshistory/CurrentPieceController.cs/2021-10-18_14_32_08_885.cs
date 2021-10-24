@@ -54,7 +54,7 @@ namespace JiufenGames.TetrisAlike.Logic
             {
                 _boardController._board[_currentPieceTiles[m].x, _currentPieceTiles[m].y]._isFilled = true;
 
-                if (_currentPieceTiles[m].x < BoardConsts.REAL_ROWS - 1)
+                if (_currentPieceTiles[m].x < BoardConsts.REAL_ROWS - 2)
                     _shouldSpawnNewPiece = true;
 
                 filledRows = CheckIfAnyRowIsFilled();

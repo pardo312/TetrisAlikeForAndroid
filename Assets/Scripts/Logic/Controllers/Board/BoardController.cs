@@ -13,9 +13,6 @@ namespace JiufenGames.TetrisAlike.Logic
         [SerializeField] private Tile _tilePrefab;
         [SerializeField] private Transform _tileParent;
 
-        [Header("Board Settings")]
-        public float _offsetTiles = 0.5f;
-
         [Header("Board")]
         [HideInInspector] public Tile[,] _board;
 
@@ -30,7 +27,7 @@ namespace JiufenGames.TetrisAlike.Logic
             for (int i = 0; i < BoardConsts.TOTAL_ROWS; i++)
                 for (int j = 0; j < BoardConsts.COLUMNS; j++)
                 {
-                    _board[i, j] = Instantiate(_tilePrefab, new Vector3(j * (1 + _offsetTiles), i * (1 + _offsetTiles), 0), Quaternion.identity, _tileParent);
+                    _board[i, j] = Instantiate(_tilePrefab, _tileParent.position + new Vector3(j * (1 + BoardConsts.OFFSET_TILES), i * (1 + BoardConsts.OFFSET_TILES), 0), Quaternion.identity, _tileParent);
                     _board[i, j]._tileRow = i;
                     _board[i, j]._tileColumn = j;
                     if (i == BoardConsts.REAL_ROWS)
@@ -69,7 +66,7 @@ namespace JiufenGames.TetrisAlike.Logic
             for (int j = 0; j < BoardConsts.COLUMNS; j++)
             {
                 _board[currentLine - 1, j].ChangeColorOfTile(_board[currentLine, j]._color);
-                if(_board[currentLine, j]._isFilled)
+                if (_board[currentLine, j]._isFilled)
                     _board[currentLine - 1, j]._isFilled = true;
             }
         }
