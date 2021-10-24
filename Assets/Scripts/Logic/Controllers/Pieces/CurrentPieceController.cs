@@ -8,39 +8,63 @@ namespace JiufenGames.TetrisAlike.Logic
 {
     public class CurrentPieceController
     {
-        public Piece _currentPiece;
-        [HideInInspector] public List<Vector2Int> _currentPieceTiles;
-        public Vector2Int _piece4x4CubeStartTile;
-        private int _currentPieceFormIndex = 0;
+        #region Fields
+        public Piece m_currentPiece;
+        private int m_currentPieceFormIndex = 0;
+        [HideInInspector] public List<Vector2Int> m_currentPieceTiles;
+        [HideInInspector] public Vector2Int[] m_currentProjectionPieces = new Vector2Int[4];
+        public Vector2Int m_piece4x4CubeStartTile;
 
         #region References
-        private BoardController _boardController;
+        private BoardController m_boardController;
         #endregion References
+        #endregion Fields
 
         #region Methods
         public void Init(BoardController boardController)
         {
-            _boardController = boardController;
+            m_boardController = boardController;
         }
-        //TEST
-        private int pieceNumber = 0;
 
-        //EndTEST
         public void OnSpawn()
         {
-            pieceNumber++;
-            _currentPieceFormIndex = 0;
+            m_currentPieceFormIndex = 0;
         }
         public bool CheckIfPieceIsInFinalPosition()
         {
             bool pieceFinalPosition = false;
-            for (int k = _currentPieceTiles.Count - 1; k >= 0; k--)
-                if (_currentPieceTiles[k].x == 0 || _boardController._board[_currentPieceTiles[k].x - 1, _currentPieceTiles[k].y]._isFilled)
+            for (int k = m_currentPieceTiles.Count - 1; k >= 0; k--)
+                if (m_currentPieceTiles[k].x == 0 || m_boardController._board[m_currentPieceTiles[k].x - 1, m_currentPieceTiles[k].y]._isFilled)
                     pieceFinalPosition = true;
             return pieceFinalPosition;
         }
 
+        #region See Where piece is going to drop
+        public void SeeWhereCurrentPieceIsDropping()
+        {
+            for (int j = 0; j < 4; j++)
+            {
+                if(!m_boardController._board[m_currentProjectionPieces[j].x, m_currentProjectionPieces[j].y]._isFilled)
+                    m_boardController._board[m_currentProjectionPieces[j].x, m_currentProjectionPieces[j].y].Reset();
+            }
+            Vector2Int[] tempCurrentPiecesTiles = new Vector2Int[m_currentPieceTiles.Count];
+            m_currentPieceTiles.CopyTo(tempCurrentPiecesTiles);
 
+            CheckLowestNotFilledTile(tempCurrentPiecesTiles, (lowestNotFilledTile, lowestRowInCurrentPiece) =>
+             {
+                 for (int j = 0; j < tempCurrentPiecesTiles.Length; j++)
+                 {
+                     Color lightVersionColor = m_currentPiece.pieceColor;
+                     lightVersionColor.a = 0.1f;
+                     m_boardController._board[lowestNotFilledTile + (tempCurrentPiecesTiles[j].x - lowestRowInCurrentPiece), tempCurrentPiecesTiles[j].y].ChangeColorOfTile(lightVersionColor,true);
+                     m_currentProjectionPieces[j] = new Vector2Int(lowestNotFilledTile + (tempCurrentPiecesTiles[j].x - lowestRowInCurrentPiece), tempCurrentPiecesTiles[j].y);
+                 }
+             });
+        }
+
+        #endregion See Where piece is going to drop
+
+        #region Interaction with other pieces
 
         /// <summary>
         /// When the current piece drops to the lowest possition, check if the tile bellow is inside te tetris board. If not end the game
@@ -50,16 +74,16 @@ namespace JiufenGames.TetrisAlike.Logic
         public List<int> CheckTileBelow(ref bool _shouldSpawnNewPiece)
         {
             List<int> filledRows = new List<int>();
-            for (int m = _currentPieceTiles.Count - 1; m >= 0; m--)
+            for (int m = m_currentPieceTiles.Count - 1; m >= 0; m--)
             {
-                _boardController._board[_currentPieceTiles[m].x, _currentPieceTiles[m].y]._isFilled = true;
+                m_boardController._board[m_currentPieceTiles[m].x, m_currentPieceTiles[m].y]._isFilled = true;
 
-                if (_currentPieceTiles[m].x < BoardConsts.REAL_ROWS - 1)
+                if (m_currentPieceTiles[m].x < BoardConsts.REAL_ROWS - 1)
                     _shouldSpawnNewPiece = true;
 
                 filledRows = CheckIfAnyRowIsFilled();
             }
-            _currentPieceTiles = new List<Vector2Int>();
+            m_currentPieceTiles = new List<Vector2Int>();
 
             if (!_shouldSpawnNewPiece)
             {
@@ -79,7 +103,7 @@ namespace JiufenGames.TetrisAlike.Logic
                 currentRowFilled = true;
                 for (int j = 0; j < BoardConsts.COLUMNS; j++)
                 {
-                    if (!_boardController._board[i, j]._isFilled)
+                    if (!m_boardController._board[i, j]._isFilled)
                         currentRowFilled = false;
                 }
 
@@ -89,13 +113,16 @@ namespace JiufenGames.TetrisAlike.Logic
             return filledRows;
         }
 
+        #endregion Interaction with other pieces
+
+        #region Movement of current Piece
         public void DropPieceTile()
         {
             MovePiecesInSomeDirection(-1, 0);
         }
         public void Change4x4CubeStartTile(int x, int y)
         {
-            _piece4x4CubeStartTile += new Vector2Int(x, y);
+            m_piece4x4CubeStartTile += new Vector2Int(x, y);
         }
 
 
@@ -104,51 +131,70 @@ namespace JiufenGames.TetrisAlike.Logic
             // All this method O(4*3) = O(12) because the currentPiecesTiles can only be an array of length 4.
             // Constant O
 
-            Vector2Int[] tempCurrentPiecesTiles = new Vector2Int[_currentPieceTiles.Count];
-            _currentPieceTiles.CopyTo(tempCurrentPiecesTiles);
+            Vector2Int[] tempCurrentPiecesTiles = new Vector2Int[m_currentPieceTiles.Count];
+            m_currentPieceTiles.CopyTo(tempCurrentPiecesTiles);
 
             //Check if the piece can move
             for (int k = 0; k < tempCurrentPiecesTiles.Length; k++)
                 if (!(tempCurrentPiecesTiles[k].x + offsetX >= 0 && tempCurrentPiecesTiles[k].x + offsetX < BoardConsts.TOTAL_ROWS &&
                     tempCurrentPiecesTiles[k].y + offsetY >= 0 && tempCurrentPiecesTiles[k].y + offsetY < BoardConsts.COLUMNS &&
-                    !_boardController._board[tempCurrentPiecesTiles[k].x + offsetX, tempCurrentPiecesTiles[k].y + offsetY]._isFilled))
+                    !m_boardController._board[tempCurrentPiecesTiles[k].x + offsetX, tempCurrentPiecesTiles[k].y + offsetY]._isFilled))
                     return false;
 
             //Reset the previours currentTiles 
             for (int k = 0; k < tempCurrentPiecesTiles.Length; k++)
-                _boardController._board[tempCurrentPiecesTiles[k].x, tempCurrentPiecesTiles[k].y].Reset();
+                m_boardController._board[tempCurrentPiecesTiles[k].x, tempCurrentPiecesTiles[k].y].Reset();
 
             //Set new currentTile piece
             for (int k = 0; k < tempCurrentPiecesTiles.Length; k++)
             {
-                _boardController._board[tempCurrentPiecesTiles[k].x + offsetX, tempCurrentPiecesTiles[k].y + offsetY].ChangeColorOfTile(_currentPiece.pieceColor);
-                _currentPieceTiles[k] = new Vector2Int(tempCurrentPiecesTiles[k].x + offsetX, tempCurrentPiecesTiles[k].y + offsetY);
+                m_boardController._board[tempCurrentPiecesTiles[k].x + offsetX, tempCurrentPiecesTiles[k].y + offsetY].ChangeColorOfTile(m_currentPiece.pieceColor);
+                m_currentPieceTiles[k] = new Vector2Int(tempCurrentPiecesTiles[k].x + offsetX, tempCurrentPiecesTiles[k].y + offsetY);
             }
             Change4x4CubeStartTile(offsetX, offsetY);
             return true;
         }
         public bool HardDropPiece()
         {
-            if (_currentPieceTiles.Count != 4)
+            if (m_currentPieceTiles.Count != 4)
                 return false;
             // All this method O(4*2 + 4*(_realRows-<highest current piece tile>) ~= O(8+4*(realRows/2)) because the currentPiecesTiles can only be an array of length 4.
             // SemiConstant O
 
-            Vector2Int[] tempCurrentPiecesTiles = new Vector2Int[_currentPieceTiles.Count];
-            _currentPieceTiles.CopyTo(tempCurrentPiecesTiles);
+            Vector2Int[] tempCurrentPiecesTiles = new Vector2Int[m_currentPieceTiles.Count];
+            m_currentPieceTiles.CopyTo(tempCurrentPiecesTiles);
 
+            CheckLowestNotFilledTile(tempCurrentPiecesTiles, (lowestNotFilledTile, lowestRowInCurrentPiece) =>
+             {
 
+                 //Reset the previours currentTiles 
+                 for (int j = 0; j < tempCurrentPiecesTiles.Length; j++)
+                     m_boardController._board[tempCurrentPiecesTiles[j].x, tempCurrentPiecesTiles[j].y].Reset();
+
+                 // Set Piece to botton
+                 for (int j = 0; j < tempCurrentPiecesTiles.Length; j++)
+                 {
+                     m_boardController._board[lowestNotFilledTile + (tempCurrentPiecesTiles[j].x - lowestRowInCurrentPiece), tempCurrentPiecesTiles[j].y].ChangeColorOfTile(m_currentPiece.pieceColor);
+                     m_currentPieceTiles[j] = new Vector2Int(lowestNotFilledTile + (tempCurrentPiecesTiles[j].x - lowestRowInCurrentPiece), tempCurrentPiecesTiles[j].y);
+                 }
+                 Change4x4CubeStartTile(3, 0);
+             });
+
+            return true;
+        }
+        private void CheckLowestNotFilledTile(Vector2Int[] _currenPieceTiles, Action<int, int> callback)
+        {
             int lowestNotFilledTile = 0;
             int lowestRowInCurrentPiece = -1;
             // Found piece's lowest not filled tile.
-            for (int j = tempCurrentPiecesTiles.Length - 1; j >= 0; j--)
+            for (int j = _currenPieceTiles.Length - 1; j >= 0; j--)
             {
-                for (int k = tempCurrentPiecesTiles[j].x - 1; k >= 0; k--)
+                for (int k = _currenPieceTiles[j].x - 1; k >= 0; k--)
                 {
-                    if (_boardController._board[k, tempCurrentPiecesTiles[j].y]._isFilled && k + 1 >= lowestNotFilledTile)
+                    if (m_boardController._board[k, _currenPieceTiles[j].y]._isFilled && k + 1 >= lowestNotFilledTile)
                     {
-                        if ((k + 1 > lowestNotFilledTile || tempCurrentPiecesTiles[j].x < lowestRowInCurrentPiece || lowestRowInCurrentPiece == -1))
-                            lowestRowInCurrentPiece = tempCurrentPiecesTiles[j].x;
+                        if ((k + 1 > lowestNotFilledTile || _currenPieceTiles[j].x < lowestRowInCurrentPiece || lowestRowInCurrentPiece == -1))
+                            lowestRowInCurrentPiece = _currenPieceTiles[j].x;
 
                         lowestNotFilledTile = k + 1;
                         break;
@@ -156,54 +202,41 @@ namespace JiufenGames.TetrisAlike.Logic
                 }
             }
 
-
             if (lowestRowInCurrentPiece == -1)
             {
                 lowestRowInCurrentPiece = BoardConsts.TOTAL_ROWS;
-                foreach (Vector2Int currentPieceTile in tempCurrentPiecesTiles)
+                foreach (Vector2Int currentPieceTile in _currenPieceTiles)
                     if (currentPieceTile.x < lowestRowInCurrentPiece)
                         lowestRowInCurrentPiece = currentPieceTile.x;
             }
-
-            //Reset the previours currentTiles 
-            for (int j = 0; j < tempCurrentPiecesTiles.Length; j++)
-                _boardController._board[tempCurrentPiecesTiles[j].x, tempCurrentPiecesTiles[j].y].Reset();
-
-            // Set Piece to botton
-            for (int j = 0; j < tempCurrentPiecesTiles.Length; j++)
-            {
-                _boardController._board[lowestNotFilledTile + (tempCurrentPiecesTiles[j].x - lowestRowInCurrentPiece), tempCurrentPiecesTiles[j].y].ChangeColorOfTile(_currentPiece.pieceColor);
-                _currentPieceTiles[j] = new Vector2Int(lowestNotFilledTile + (tempCurrentPiecesTiles[j].x - lowestRowInCurrentPiece), tempCurrentPiecesTiles[j].y);
-            }
-            Change4x4CubeStartTile(3, 0);
-            return true;
+            callback?.Invoke(lowestNotFilledTile, lowestRowInCurrentPiece);
         }
 
         public void RotatePiece(bool clockwise)
         {
             if (clockwise)
             {
-                _currentPieceFormIndex++;
-                if (_currentPieceFormIndex == 4)
-                    _currentPieceFormIndex = 0;
+                m_currentPieceFormIndex++;
+                if (m_currentPieceFormIndex == 4)
+                    m_currentPieceFormIndex = 0;
             }
             else
             {
-                _currentPieceFormIndex--;
-                if (_currentPieceFormIndex == -1)
-                    _currentPieceFormIndex = 3;
+                m_currentPieceFormIndex--;
+                if (m_currentPieceFormIndex == -1)
+                    m_currentPieceFormIndex = 3;
 
             }
 
-            _currentPieceTiles = new List<Vector2Int>();
+            m_currentPieceTiles = new List<Vector2Int>();
             ExecuteRotation();
             PaintCurrentPieces();
         }
 
         private void PaintCurrentPieces()
         {
-            for (int j = 0; j < _currentPieceTiles.Count; j++)
-                _boardController._board[_currentPieceTiles[j].x, _currentPieceTiles[j].y].ChangeColorOfTile(_currentPiece.pieceColor);
+            for (int j = 0; j < m_currentPieceTiles.Count; j++)
+                m_boardController._board[m_currentPieceTiles[j].x, m_currentPieceTiles[j].y].ChangeColorOfTile(m_currentPiece.pieceColor);
         }
 
         private void ExecuteRotation()
@@ -213,9 +246,9 @@ namespace JiufenGames.TetrisAlike.Logic
             {
                 for (int j = 3; j >= 0; j--)
                 {
-                    int tileRow = i + _piece4x4CubeStartTile.x;
-                    int tileColumn = j + _piece4x4CubeStartTile.y;
-                    if (_currentPiece.pieceForms[_currentPieceFormIndex].pieceTiles[(3 - i) + (j * PieceForm.PIECE_TILES_WIDTH)])
+                    int tileRow = i + m_piece4x4CubeStartTile.x;
+                    int tileColumn = j + m_piece4x4CubeStartTile.y;
+                    if (m_currentPiece.pieceForms[m_currentPieceFormIndex].pieceTiles[(3 - i) + (j * PieceForm.PIECE_TILES_WIDTH)])
                     {
                         if (!CheckIfMovementIsOnSideLimits(tileRow, tileColumn))
                         {
@@ -223,14 +256,14 @@ namespace JiufenGames.TetrisAlike.Logic
                             return;
                         }
 
-                        if (_boardController._board[tileRow, tileColumn]._isFilled)
+                        if (m_boardController._board[tileRow, tileColumn]._isFilled)
                         {
                             //If any of the tiles collide with a filled tile after the rotation, put the piece one row above the current.
-                            _piece4x4CubeStartTile += new Vector2Int(1, 0);
+                            m_piece4x4CubeStartTile += new Vector2Int(1, 0);
                             ResetPieceBeforRotation();
                             return;
                         }
-                        _currentPieceTiles.Add(new Vector2Int(tileRow, tileColumn));
+                        m_currentPieceTiles.Add(new Vector2Int(tileRow, tileColumn));
                     }
                 }
             }
@@ -241,11 +274,14 @@ namespace JiufenGames.TetrisAlike.Logic
         /// </summary>
         private void ResetPieceBeforRotation()
         {
-            _currentPieceTiles = new List<Vector2Int>();
+            m_currentPieceTiles = new List<Vector2Int>();
             Reset4x4Cube();
             ExecuteRotation();
         }
 
+        #endregion Movement of current Piece
+
+        #region Helpers
         private void Reset4x4Cube()
         {
             for (int i = 3; i >= 0; i--)
@@ -253,12 +289,12 @@ namespace JiufenGames.TetrisAlike.Logic
                 for (int j = 3; j >= 0; j--)
                 {
 
-                    int tileRow = i + _piece4x4CubeStartTile.x;
-                    int tileColumn = j + _piece4x4CubeStartTile.y;
+                    int tileRow = i + m_piece4x4CubeStartTile.x;
+                    int tileColumn = j + m_piece4x4CubeStartTile.y;
                     if (tileRow >= 0 && tileRow < BoardConsts.TOTAL_ROWS && tileColumn >= 0 && tileColumn < BoardConsts.COLUMNS)
                     {
-                        if (!_boardController._board[tileRow, tileColumn]._isFilled)
-                            _boardController._board[tileRow, tileColumn].Reset();
+                        if (!m_boardController._board[tileRow, tileColumn]._isFilled)
+                            m_boardController._board[tileRow, tileColumn].Reset();
                     }
                 }
             }
@@ -269,28 +305,29 @@ namespace JiufenGames.TetrisAlike.Logic
             bool noOffsetApplied = true;
             if (tileRow < 0)
             {
-                _piece4x4CubeStartTile.x++;
+                m_piece4x4CubeStartTile.x++;
                 noOffsetApplied = false;
             }
             else if (tileRow > BoardConsts.TOTAL_ROWS - 1)
             {
-                _piece4x4CubeStartTile.x--;
+                m_piece4x4CubeStartTile.x--;
                 noOffsetApplied = false;
             }
 
             if (tileColumn < 0)
             {
-                _piece4x4CubeStartTile.y++;
+                m_piece4x4CubeStartTile.y++;
                 noOffsetApplied = false;
             }
             else if (tileColumn > BoardConsts.COLUMNS - 1)
             {
-                _piece4x4CubeStartTile.y--;
+                m_piece4x4CubeStartTile.y--;
                 noOffsetApplied = false;
             }
 
             return noOffsetApplied;
         }
+        #endregion Helpers
+        #endregion Methods
     }
-    #endregion Methods
 }

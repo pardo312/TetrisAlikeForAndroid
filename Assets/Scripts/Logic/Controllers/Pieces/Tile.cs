@@ -23,21 +23,29 @@ namespace JiufenGames.TetrisAlike.Logic
             _color = BoardConsts.DEFAULT_COLOR;
         }
 
-        public void ChangeColorOfTile(Color newColor)
+        public void ChangeColorOfTile(Color newColor, bool changeAlpha = false)
         {
+            if (!changeAlpha)
+            {
+                Color resetedColor = _spriteRenderer.color;
+                resetedColor.a = 1;
+                _spriteRenderer.color = resetedColor;
+            }
+
             if (((_isPartOfFirstRowAfterRealBoard || _isPartOfHiddenBoard) && newColor.Equals(BoardConsts.DEFAULT_COLOR)))
                 newColor = Color.clear;
             if (_isPartOfHiddenBoard && !newColor.Equals(Color.clear))
                 return;
             _color = newColor;
             _spriteRenderer.color = _color;
+
         }
 
         public void Reset()
         {
-            if(_isPartOfFirstRowAfterRealBoard)
+            if (_isPartOfFirstRowAfterRealBoard)
                 ChangeColorOfTile(Color.clear);
-            else if (!_isPartOfHiddenBoard )
+            else if (!_isPartOfHiddenBoard)
                 ChangeColorOfTile(BoardConsts.DEFAULT_COLOR);
 
             _isFilled = false;

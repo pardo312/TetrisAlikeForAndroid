@@ -61,6 +61,7 @@ namespace JiufenGames.TetrisAlike.Logic
                 ResetLine(i);
             }
         }
+
         private void DropLine(int currentLine)
         {
             for (int j = 0; j < BoardConsts.COLUMNS; j++)

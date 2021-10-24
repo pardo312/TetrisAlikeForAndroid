@@ -42,6 +42,16 @@ namespace JiufenGames.TetrisAlike.Logic
 
         void Update()
         {
+            bool IsPieceInFinalPosition = false;
+
+            //Piece Projection
+            if (!m_shouldSpawnNewPiece)
+            {
+                IsPieceInFinalPosition = m_currentPieceController.CheckIfPieceIsInFinalPosition();
+                if (!IsPieceInFinalPosition)
+                    m_currentPieceController.SeeWhereCurrentPieceIsDropping();
+            }
+
             m_timer += Time.deltaTime;
             if (m_timer < m_timeBetweenFalls)
                 return;
@@ -50,12 +60,14 @@ namespace JiufenGames.TetrisAlike.Logic
 
             m_timer = 0;
 
+            //Piece Spawn
             if (m_shouldSpawnNewPiece)
             {
                 SpawnPiece();
                 m_shouldSpawnNewPiece = false;
             }
-            else if (m_currentPieceController.CheckIfPieceIsInFinalPosition())
+            //Piece droped and finished
+            else if (IsPieceInFinalPosition)
             {
                 m_userExecutingAction = true;
 
@@ -70,12 +82,14 @@ namespace JiufenGames.TetrisAlike.Logic
 
                 m_timer = m_timeBetweenFalls;
             }
+            //Drop piece
             else
             {
                 //If it isn't spawing or in final position drop the piece.
                 m_currentPieceController.DropPieceTile();
             }
             m_playerBehaviour.NeedToWaitForNextSpawn();
+
 
         }
 
@@ -84,9 +98,9 @@ namespace JiufenGames.TetrisAlike.Logic
             m_pieceSpawner.SpawnPiece(BoardConsts.REAL_ROWS, m_boardController._board, m_nextPieceController.GetNextPiece(),
                (currentPiece, piece4x4SquareTiles, currentPieceTiles) =>
                {
-                   m_currentPieceController._currentPiece = currentPiece;
-                   m_currentPieceController._piece4x4CubeStartTile = piece4x4SquareTiles;
-                   m_currentPieceController._currentPieceTiles = currentPieceTiles;
+                   m_currentPieceController.m_currentPiece = currentPiece;
+                   m_currentPieceController.m_piece4x4CubeStartTile = piece4x4SquareTiles;
+                   m_currentPieceController.m_currentPieceTiles = currentPieceTiles;
                });
 
             m_nextPieceController.ShowNextPiece();
