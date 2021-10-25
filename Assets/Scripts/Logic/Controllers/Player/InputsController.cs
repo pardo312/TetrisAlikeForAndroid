@@ -95,6 +95,11 @@ public class InputsController : MonoBehaviour
                 _inputsConfig._rotateCounterClockwise,
                 () => _OnRotatePiece?.Invoke(false)
             ));
+        CheckIfIsPressingKey(_inputsConfig._storePiece,
+            () => CheckSingleInput(
+                _inputsConfig._storePiece,
+                () => _OnStorePiece?.Invoke()
+            ));
         //No key Pressed
         if (Input.GetKey(KeyCode.None))
         {

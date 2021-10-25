@@ -36,13 +36,7 @@ namespace JiufenGames.TetrisAlike.Logic
         #region See Where piece is going to drop
         public void SeeWhereCurrentPieceIsDropping()
         {
-            for (int j = 0; j < 4; j++)
-            {
-                if (!m_boardController._board[m_currentProjectionPieces[j].x, m_currentProjectionPieces[j].y]._isFilled)
-                {
-                    m_boardController._board[m_currentProjectionPieces[j].x, m_currentProjectionPieces[j].y].Reset();
-                }
-            }
+            ClearCurrentPieceTiles(m_currentProjectionPieces);
             Vector2Int[] tempCurrentPiecesTiles = new Vector2Int[m_currentPieceTiles.Count];
             m_currentPieceTiles.CopyTo(tempCurrentPiecesTiles);
 
@@ -169,10 +163,10 @@ namespace JiufenGames.TetrisAlike.Logic
             Change4x4CubeStartTile(offsetX, offsetY);
             return true;
         }
-        public bool HardDropPiece()
+        public void HardDropPiece(Action callback)
         {
             if (m_currentPieceTiles.Count != 4)
-                return false;
+                return;
             // All this method O(4*2 + 4*(_realRows-<highest current piece tile>) ~= O(8+4*(realRows/2)) because the currentPiecesTiles can only be an array of length 4.
             // SemiConstant O
 
@@ -193,9 +187,9 @@ namespace JiufenGames.TetrisAlike.Logic
                      m_currentPieceTiles[j] = new Vector2Int(lowestNotFilledTile + (tempCurrentPiecesTiles[j].x - lowestRowInCurrentPiece), tempCurrentPiecesTiles[j].y);
                  }
                  Change4x4CubeStartTile(3, 0);
+                 callback?.Invoke();
              });
 
-            return true;
         }
         public void RotatePiece(bool clockwise)
         {
@@ -267,6 +261,17 @@ namespace JiufenGames.TetrisAlike.Logic
         #endregion Movement of current Piece
 
         #region Helpers
+        public void ClearCurrentPieceTiles(Vector2Int[] tileList)
+        {
+            for (int j = 0; j < 4; j++)
+            {
+                if (!m_boardController._board[tileList[j].x, tileList[j].y]._isFilled)
+                {
+                    m_boardController._board[tileList[j].x, tileList[j].y].Reset();
+                }
+            }
+        }
+
         public bool CheckIfPieceIsInFinalPosition()
         {
             bool pieceFinalPosition = false;
