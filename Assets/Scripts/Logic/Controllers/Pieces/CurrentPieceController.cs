@@ -21,6 +21,7 @@ namespace JiufenGames.TetrisAlike.Logic
         #endregion Fields
 
         #region Methods
+        #region Init
         public void Init(BoardController boardController)
         {
             m_boardController = boardController;
@@ -30,34 +31,48 @@ namespace JiufenGames.TetrisAlike.Logic
         {
             m_currentPieceFormIndex = 0;
         }
-        public bool CheckIfPieceIsInFinalPosition()
-        {
-            bool pieceFinalPosition = false;
-            for (int k = m_currentPieceTiles.Count - 1; k >= 0; k--)
-                if (m_currentPieceTiles[k].x == 0 || m_boardController._board[m_currentPieceTiles[k].x - 1, m_currentPieceTiles[k].y]._isFilled)
-                    pieceFinalPosition = true;
-            return pieceFinalPosition;
-        }
+        #endregion Init
 
         #region See Where piece is going to drop
         public void SeeWhereCurrentPieceIsDropping()
         {
             for (int j = 0; j < 4; j++)
             {
-                if(!m_boardController._board[m_currentProjectionPieces[j].x, m_currentProjectionPieces[j].y]._isFilled)
+                if (!m_boardController._board[m_currentProjectionPieces[j].x, m_currentProjectionPieces[j].y]._isFilled)
+                {
                     m_boardController._board[m_currentProjectionPieces[j].x, m_currentProjectionPieces[j].y].Reset();
+                }
             }
             Vector2Int[] tempCurrentPiecesTiles = new Vector2Int[m_currentPieceTiles.Count];
             m_currentPieceTiles.CopyTo(tempCurrentPiecesTiles);
 
             CheckLowestNotFilledTile(tempCurrentPiecesTiles, (lowestNotFilledTile, lowestRowInCurrentPiece) =>
              {
-                 for (int j = 0; j < tempCurrentPiecesTiles.Length; j++)
+                 for (int j = tempCurrentPiecesTiles.Length - 1; j >= 0; j--)
                  {
-                     Color lightVersionColor = m_currentPiece.pieceColor;
-                     lightVersionColor.a = 0.1f;
-                     m_boardController._board[lowestNotFilledTile + (tempCurrentPiecesTiles[j].x - lowestRowInCurrentPiece), tempCurrentPiecesTiles[j].y].ChangeColorOfTile(lightVersionColor,true);
-                     m_currentProjectionPieces[j] = new Vector2Int(lowestNotFilledTile + (tempCurrentPiecesTiles[j].x - lowestRowInCurrentPiece), tempCurrentPiecesTiles[j].y);
+                     int nextRowForThisTile = lowestNotFilledTile + (tempCurrentPiecesTiles[j].x - lowestRowInCurrentPiece);
+
+                     //Search if the preview tile is blocking any current tile
+                     bool tileHasCurrentPiece = false;
+
+                     for (int j2 = tempCurrentPiecesTiles.Length - 1; j2 >= 0; j2--)
+                         if (nextRowForThisTile == tempCurrentPiecesTiles[j2].x)
+                             tileHasCurrentPiece = true;
+
+                     if (tileHasCurrentPiece)
+                     {
+                         m_boardController._board[nextRowForThisTile, tempCurrentPiecesTiles[j].y].ChangeColorOfTile(m_currentPiece.pieceColor);
+                         continue;
+                     }
+
+                     //Show Preview tile
+                     if (!m_boardController._board[lowestNotFilledTile + (tempCurrentPiecesTiles[j].x - lowestRowInCurrentPiece), tempCurrentPiecesTiles[j].y]._isFilled)
+                     {
+                         Color lightVersionColor = m_currentPiece.pieceColor;
+                         lightVersionColor.a = 0.1f;
+                         m_boardController._board[nextRowForThisTile, tempCurrentPiecesTiles[j].y].ChangeColorOfTile(lightVersionColor, true);
+                         m_currentProjectionPieces[j] = new Vector2Int(nextRowForThisTile, tempCurrentPiecesTiles[j].y);
+                     }
                  }
              });
         }
@@ -182,36 +197,6 @@ namespace JiufenGames.TetrisAlike.Logic
 
             return true;
         }
-        private void CheckLowestNotFilledTile(Vector2Int[] _currenPieceTiles, Action<int, int> callback)
-        {
-            int lowestNotFilledTile = 0;
-            int lowestRowInCurrentPiece = -1;
-            // Found piece's lowest not filled tile.
-            for (int j = _currenPieceTiles.Length - 1; j >= 0; j--)
-            {
-                for (int k = _currenPieceTiles[j].x - 1; k >= 0; k--)
-                {
-                    if (m_boardController._board[k, _currenPieceTiles[j].y]._isFilled && k + 1 >= lowestNotFilledTile)
-                    {
-                        if ((k + 1 > lowestNotFilledTile || _currenPieceTiles[j].x < lowestRowInCurrentPiece || lowestRowInCurrentPiece == -1))
-                            lowestRowInCurrentPiece = _currenPieceTiles[j].x;
-
-                        lowestNotFilledTile = k + 1;
-                        break;
-                    }
-                }
-            }
-
-            if (lowestRowInCurrentPiece == -1)
-            {
-                lowestRowInCurrentPiece = BoardConsts.TOTAL_ROWS;
-                foreach (Vector2Int currentPieceTile in _currenPieceTiles)
-                    if (currentPieceTile.x < lowestRowInCurrentPiece)
-                        lowestRowInCurrentPiece = currentPieceTile.x;
-            }
-            callback?.Invoke(lowestNotFilledTile, lowestRowInCurrentPiece);
-        }
-
         public void RotatePiece(bool clockwise)
         {
             if (clockwise)
@@ -282,6 +267,61 @@ namespace JiufenGames.TetrisAlike.Logic
         #endregion Movement of current Piece
 
         #region Helpers
+        public bool CheckIfPieceIsInFinalPosition()
+        {
+            bool pieceFinalPosition = false;
+            for (int k = m_currentPieceTiles.Count - 1; k >= 0; k--)
+                if (m_currentPieceTiles[k].x == 0 || m_boardController._board[m_currentPieceTiles[k].x - 1, m_currentPieceTiles[k].y]._isFilled)
+                    pieceFinalPosition = true;
+            return pieceFinalPosition;
+        }
+
+        private void CheckLowestNotFilledTile(Vector2Int[] _currenPieceTiles, Action<int, int> callback)
+        {
+            int lowestNotFilledTile = 0;
+            int lowestRowInCurrentPiece = -1;
+            // Found piece's lowest not filled tile.
+            for (int k = _currenPieceTiles.Length - 1; k >= 0; k--)
+            {
+                for (int j = _currenPieceTiles[k].x - 1; j >= 0; j--)
+                {
+                    if (m_boardController._board[j, _currenPieceTiles[k].y]._isFilled && j + 1 >= lowestNotFilledTile)
+                    {
+                        if ((j + 1 > lowestNotFilledTile || _currenPieceTiles[k].x <= lowestRowInCurrentPiece || lowestRowInCurrentPiece == -1))
+                        {
+                            //UGLY UGLY FIX THIS FOR THE LOVE OF GOOD OL GOD
+                            bool doesAllTilesInCurrentPieceFitLowest = true;
+                            for (int k2 = _currenPieceTiles.Length - 1; k2 >= 0; k2--)
+                            {
+                                int nextPositionOfTile = (j + 1) + (_currenPieceTiles[k2].x - _currenPieceTiles[k].x);
+                                if (nextPositionOfTile < 0 || m_boardController._board[nextPositionOfTile, _currenPieceTiles[k2].y]._isFilled)
+                                {
+                                    doesAllTilesInCurrentPieceFitLowest = false;
+                                    break;
+                                }
+                            }
+                            if (!doesAllTilesInCurrentPieceFitLowest)
+                                break;
+                            //END OF UGLU PD: FIX THIIIS!!
+
+                            lowestRowInCurrentPiece = _currenPieceTiles[k].x;
+                            lowestNotFilledTile = j + 1;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (lowestRowInCurrentPiece == -1)
+            {
+                lowestRowInCurrentPiece = BoardConsts.TOTAL_ROWS;
+                foreach (Vector2Int currentPieceTile in _currenPieceTiles)
+                    if (currentPieceTile.x < lowestRowInCurrentPiece)
+                        lowestRowInCurrentPiece = currentPieceTile.x;
+            }
+            callback?.Invoke(lowestNotFilledTile, lowestRowInCurrentPiece);
+        }
+
         private void Reset4x4Cube()
         {
             for (int i = 3; i >= 0; i--)

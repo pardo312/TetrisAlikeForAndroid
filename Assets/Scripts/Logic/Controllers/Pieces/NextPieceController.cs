@@ -43,11 +43,11 @@ namespace JiufenGames.TetrisAlike.Logic
         {
             Piece nextPiece = m_queueofNewPieces.Peek();
 
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i <4; i++)
             {
-                for (int j = 0; j < 4; j++)
+                for (int j = 0; j <4 ; j++)
                 {
-                    if (nextPiece.pieceForms[0].pieceTiles[(i + j * PieceForm.PIECE_TILES_WIDTH)])
+                    if (nextPiece.pieceForms[0].pieceTiles[(3 - i) + ((  j) * PieceForm.PIECE_TILES_WIDTH)])
                         m_4x4board[i, j].ChangeColorOfTile(nextPiece.pieceColor);
                     else
                         m_4x4board[i, j].ChangeColorOfTile(BoardConsts.DEFAULT_COLOR);
