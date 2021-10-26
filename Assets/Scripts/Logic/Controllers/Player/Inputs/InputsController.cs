@@ -13,11 +13,13 @@ namespace JiufenGames.TetrisAlike.Logic
         // Start is called before the first frame update
         private void Awake()
         {
+            //Change This
             if (_instance != null)
-                DestroyImmediate(this);
+            {
+                DestroyImmediate(_instance);
+            }
 
             _instance = this;
-            DontDestroyOnLoad(this);
         }
 
         #endregion Singleton
@@ -55,10 +57,10 @@ namespace JiufenGames.TetrisAlike.Logic
         // KeyPressed Record
         private List<TetrisInputs> m_currentPressedInputs = new List<TetrisInputs>();
         private List<TetrisInputs> m_lastInputPressed = new List<TetrisInputs>();
-        private int m_timesPressed = 0;
 
         //Input timing
         private int m_neededTimePresses = 5;
+        private float m_timesPressed = 0;
 
         #endregion Variables
 
@@ -144,7 +146,7 @@ namespace JiufenGames.TetrisAlike.Logic
         {
             if (m_lastInputPressed.Contains(input))
             {
-                m_timesPressed++;
+                m_timesPressed += Time.deltaTime * 100;
                 if (m_timesPressed > m_neededTimePresses)
                 {
                     inputAction?.Invoke();

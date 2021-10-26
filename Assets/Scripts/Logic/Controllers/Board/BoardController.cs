@@ -27,7 +27,8 @@ namespace JiufenGames.TetrisAlike.Logic
             for (int i = 0; i < BoardConsts.TOTAL_ROWS; i++)
                 for (int j = 0; j < BoardConsts.COLUMNS; j++)
                 {
-                    _board[i, j] = Instantiate(_tilePrefab, _tileParent.position + new Vector3(j * (1 + BoardConsts.OFFSET_TILES), i * (1 + BoardConsts.OFFSET_TILES), 0), Quaternion.identity, _tileParent);
+                    _board[i, j] = Instantiate(_tilePrefab, _tileParent.position + new Vector3(j * (1 * BoardConsts.OFFSET_TILES), i * (1 * BoardConsts.OFFSET_TILES), 0), Quaternion.identity, _tileParent);
+                    _board[i, j].transform.localScale = _tileParent.localScale;
                     _board[i, j]._tileRow = i;
                     _board[i, j]._tileColumn = j;
                     if (i == BoardConsts.REAL_ROWS)

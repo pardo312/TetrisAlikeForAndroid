@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace JiufenGames.TetrisAlike.Logic
 {
@@ -163,6 +164,11 @@ namespace JiufenGames.TetrisAlike.Logic
         public void RotatePiece(bool clockwise)
         {
             m_currentPieceController.RotatePiece(clockwise);
+        }
+
+        public void ResetScene()
+        {
+            SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().name); 
         }
         #endregion Player Behaviours
         #endregion Methods

@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: InputsGamepadConfigScriptable
   m_EditorClassIdentifier: 
   m_none: 0
-  m_XAxis: Axis 1
-  m_YAxis: Axis 2
-  m_altXAxis: Axis 3
-  m_altYAxis: Axis 4
+  m_XAxis: Horizontal
+  m_YAxis: Vertical
+  m_altXAxis: HorizontalAlt
+  m_altYAxis: VerticalAlt
   m_rotateClockwise: 350
   m_rotateCounterClockwise: 351
   m_storePiece: 354
