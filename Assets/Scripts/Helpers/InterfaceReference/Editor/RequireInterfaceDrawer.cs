@@ -18,16 +18,9 @@ public class RequireInterfaceDrawer : PropertyDrawer
         // Check if this is reference type property.
         if (property.propertyType == SerializedPropertyType.ObjectReference)
         {
-            // Get attribute parameters.
             var requiredAttribute = this.attribute as RequireInterfaceAttribute;
-
-            // Begin drawing property field.
             EditorGUI.BeginProperty(position, label, property);
-
-            // Draw property field.
             property.objectReferenceValue = EditorGUI.ObjectField(position, label, property.objectReferenceValue, requiredAttribute.RequiredType, true);
-
-            // Finish drawing property field.
             EditorGUI.EndProperty();
         }
         else
