@@ -1,41 +1,41 @@
-using JiufenGames.TetrisAlike.Logic;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 namespace JiufenGames.TetrisAlike.Logic
 {
     public class PlayerBehaviour
     {
         #region Variables
+
         private GameplayController _gameplayController;
-        #endregion
+
+        #endregion Variables
 
         #region Init
+
         public void Init(GameplayController gameplayController)
         {
             _gameplayController = gameplayController;
-            InputsController._instance._initialTimeBetweenInputs = gameplayController.m_timeBetweenFalls * 0.5f;
+            InputsController._instance.m_initialTimeBetweenInputs = gameplayController.m_timeBetweenFalls * 0.5f;
 
             DesuscribreInputsEvents();
             SuscribeInputEvents();
-
         }
+
         private void DesuscribreInputsEvents()
         {
-            InputsController._instance._OnMovePiece -= MovePiece;
-            InputsController._instance._OnDropPiece -= DropPiece;
-            InputsController._instance._OnRotatePiece -= RotatePiece;
-            InputsController._instance._OnStorePiece -= StorePiece;
+            InputsController._instance.m_OnMovePiece -= MovePiece;
+            InputsController._instance.m_OnDropPiece -= DropPiece;
+            InputsController._instance.m_OnRotatePiece -= RotatePiece;
+            InputsController._instance.m_OnStorePiece -= StorePiece;
         }
+
         private void SuscribeInputEvents()
         {
-            InputsController._instance._OnMovePiece += MovePiece;
-            InputsController._instance._OnDropPiece += DropPiece;
-            InputsController._instance._OnRotatePiece += RotatePiece;
-            InputsController._instance._OnStorePiece += StorePiece;
+            InputsController._instance.m_OnMovePiece += MovePiece;
+            InputsController._instance.m_OnDropPiece += DropPiece;
+            InputsController._instance.m_OnRotatePiece += RotatePiece;
+            InputsController._instance.m_OnStorePiece += StorePiece;
         }
-        #endregion
+
+        #endregion Init
 
         private void MovePiece(bool toLeft)
         {
@@ -79,7 +79,6 @@ namespace JiufenGames.TetrisAlike.Logic
 
         private void StorePiece()
         {
-
             if (_gameplayController.m_shouldSpawnNewPiece)
                 return;
 
@@ -87,6 +86,5 @@ namespace JiufenGames.TetrisAlike.Logic
             _gameplayController.StorePiece();
             _gameplayController.m_userExecutingAction = false;
         }
-
     }
 }

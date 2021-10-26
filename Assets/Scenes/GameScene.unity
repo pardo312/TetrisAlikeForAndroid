@@ -133,6 +133,7 @@ GameObject:
   m_Component:
   - component: {fileID: 91466691}
   - component: {fileID: 91466690}
+  - component: {fileID: 91466692}
   m_Layer: 0
   m_Name: InputController
   m_TagString: Untagged
@@ -149,12 +150,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 91466689}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b2922372d1568724facc3205080b3dac, type: 3}
+  m_Script: {fileID: 11500000, guid: cab7a01e85fc73a429e41cd791c2efcd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _inputsConfig: {fileID: 11400000, guid: ae8463c9d19c628428e51f00f843a630, type: 2}
-  _initialTimeBetweenInputs: 0.1
-  _currentTimeBetweenInputs: 0.1
+  m_inputsListenerObject:
+  - {fileID: 91466692}
+  m_initialTimeBetweenInputs: 0.8
+  m_currentTimeBetweenInputs: 0.05
 --- !u!4 &91466691
 Transform:
   m_ObjectHideFlags: 0
@@ -169,6 +171,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &91466692
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 91466689}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1413c66bdb28f64bba80b5216350e9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  keysScriptable: {fileID: 11400000, guid: ae8463c9d19c628428e51f00f843a630, type: 2}
 --- !u!1 &371708370
 GameObject:
   m_ObjectHideFlags: 0
@@ -480,6 +495,36 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 722999071}
   m_CullTransparentMesh: 1
+--- !u!1 &759130368
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 759130369}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &759130369
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 759130368}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -4.8014665, y: 20.898539, z: -1.1177197}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 14
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &793928149
 GameObject:
   m_ObjectHideFlags: 0
@@ -1721,7 +1766,7 @@ MonoBehaviour:
   m_scoreController: {fileID: 1721191874}
   m_shouldSpawnNewPiece: 1
   m_userExecutingAction: 0
-  m_timeBetweenFalls: 0.5
+  m_timeBetweenFalls: 0.3
 --- !u!4 &1725523635
 Transform:
   m_ObjectHideFlags: 0
@@ -1909,7 +1954,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f8827fda30b0a7478a2289838615c84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_piecesTypes: {fileID: 11400000, guid: 3ae9c107c18835545839e26141575473, type: 2}
   m_storePieceTilesParent: {fileID: 1580305199}
   m_tilePrefab: {fileID: 6272846969044427285, guid: 991cd81ac69a2454396c315ce2c699c3, type: 3}
 --- !u!1 &1849408217
