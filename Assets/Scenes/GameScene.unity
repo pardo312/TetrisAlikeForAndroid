@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 91466691}
   - component: {fileID: 91466690}
   - component: {fileID: 91466692}
+  - component: {fileID: 91466693}
   m_Layer: 0
   m_Name: InputController
   m_TagString: Untagged
@@ -183,7 +184,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1413c66bdb28f64bba80b5216350e9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  keysScriptable: {fileID: 11400000, guid: ae8463c9d19c628428e51f00f843a630, type: 2}
+  keysScriptable: {fileID: 11400000, guid: 161dc5da9af4c264cb278fd1b2f7fe5b, type: 2}
+--- !u!114 &91466693
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 91466689}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f75eba170f29fc946b71b39acb9be507, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_gamepadButtonScriptable: {fileID: 0}
 --- !u!1 &371708370
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,10 +1,8 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(fileName = "InputsKeyConfigScriptable.asset", menuName = "TetrisAlike/Inputs/InputsConfigScriptable")]
-public class InputsKeyConfigScriptable : ScriptableObject
+[CreateAssetMenu(fileName = "InputsConfigScriptable.asset", menuName = "TetrisAlike/Inputs/InputConfigScriptable")]
+public class InputsKeyboardConfigScriptable : ScriptableObject
 {
-    public InputSource _inputSource = InputSource.KEYBOARD;
-
     public KeyCode m_none = KeyCode.None;
 
     public KeyCode m_moveLeft = KeyCode.A;

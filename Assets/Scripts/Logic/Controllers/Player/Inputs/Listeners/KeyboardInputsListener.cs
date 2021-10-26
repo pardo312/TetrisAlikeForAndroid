@@ -8,7 +8,7 @@ namespace JiufenGames.TetrisAlike.Logic
 {
     public class KeyboardInputsListener : MonoBehaviour,InputsListener
     {
-        [SerializeField] InputsKeyConfigScriptable keysScriptable;
+        [SerializeField] InputsKeyboardConfigScriptable keysScriptable;
         public List<TetrisInputs> GetCurrentInputsPressed()
         {
             List<TetrisInputs> currentlyPressedKeys = new List<TetrisInputs>();

@@ -9,15 +9,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d4f66a0210fa1e541b6033a424330c45, type: 3}
-  m_Name: InputsConfigScriptable 1
+  m_Script: {fileID: 11500000, guid: afd4f00f12d7e7d4db1db2fef0d38462, type: 3}
+  m_Name: InputsGamepadConfigScriptable
   m_EditorClassIdentifier: 
-  _inputSource: 0
   m_none: 0
-  m_moveLeft: 97
-  m_moveRight: 100
-  m_softDrop: 115
-  m_hardDrop: 119
-  m_rotateClockwise: 107
-  m_rotateCounterClockwise: 106
-  m_storePiece: 101
+  m_XAxis: Axis 1
+  m_YAxis: Axis 2
+  m_altXAxis: Axis 3
+  m_altYAxis: Axis 4
+  m_rotateClockwise: 350
+  m_rotateCounterClockwise: 351
+  m_storePiece: 354
+  m_storePieceAlt: 356
