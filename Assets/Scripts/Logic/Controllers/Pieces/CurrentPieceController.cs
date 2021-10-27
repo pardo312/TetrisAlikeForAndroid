@@ -50,7 +50,7 @@ namespace JiufenGames.TetrisAlike.Logic
                      bool tileHasCurrentPiece = false;
 
                      for (int j2 = tempCurrentPiecesTiles.Length - 1; j2 >= 0; j2--)
-                         if (nextRowForThisTile == tempCurrentPiecesTiles[j2].x)
+                         if (nextRowForThisTile == tempCurrentPiecesTiles[j2].x && tempCurrentPiecesTiles[j].y == tempCurrentPiecesTiles[j2].y)
                              tileHasCurrentPiece = true;
 
                      if (tileHasCurrentPiece)
