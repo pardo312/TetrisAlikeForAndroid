@@ -59,7 +59,7 @@ namespace JiufenGames.TetrisAlike.Logic
         private List<TetrisInputs> m_lastInputPressed = new List<TetrisInputs>();
 
         //Input timing
-        private int m_neededTimePresses = 5;
+        private int m_neededTimePresses = InputsConsts.ON_CONTINOUS_MOVEMENT_NEEDED_TIME_PRESSES_FOR_NEXT_MOVEMENT;
         private float m_timesPressed = 0;
 
         #endregion Variables
@@ -79,7 +79,11 @@ namespace JiufenGames.TetrisAlike.Logic
             m_currentPressedInputs = new List<TetrisInputs>();
             m_inputsListener.ForEach((item) =>
             {
-                item.GetCurrentInputsPressed().ForEach((inputsPressed) => m_currentPressedInputs.Add(inputsPressed));
+                item.GetCurrentInputsPressed().ForEach((inputsPressed) =>
+                {
+                    if (!m_currentPressedInputs.Contains(inputsPressed))
+                        m_currentPressedInputs.Add(inputsPressed);
+                });
             });
 
             // Movement of piece
@@ -124,7 +128,7 @@ namespace JiufenGames.TetrisAlike.Logic
                     () => m_OnStorePiece?.Invoke()
                 ));
             //No key Pressed
-            if (m_currentPressedInputs.Count == 1 && m_currentPressedInputs[0] == TetrisInputs.NONE)
+            if (m_currentPressedInputs.Count == 1 && m_currentPressedInputs.Contains(TetrisInputs.NONE))
             {
                 m_timesPressed = 0;
                 m_lastInputPressed = new List<TetrisInputs>();

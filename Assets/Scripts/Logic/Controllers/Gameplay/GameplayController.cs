@@ -73,29 +73,17 @@ namespace JiufenGames.TetrisAlike.Logic
 
             m_timer = 0;
 
-            //Piece droped and finished
-            if (IsPieceInFinalPosition)
-            {
-                m_userExecutingAction = true;
-
-                List<int> filledRows = m_currentPieceController.CheckTileBelow(ref m_shouldSpawnNewPiece);
-                if (filledRows.Count > 0)
-                {
-                    m_boardController.ClearCompletedLine(filledRows);
-                    m_scoreController.CleanLineAddScore(filledRows.Count);
-                }
-
-                m_userExecutingAction = false;
-
-                m_timer = m_timeBetweenFalls;
-                canStorePiece = true;
-            }
             //Piece Spawn
-            else if (m_shouldSpawnNewPiece)
+            if (m_shouldSpawnNewPiece)
             {
                 if (pieceToSpawn == null)
                     pieceToSpawn = m_nextPieceController.GetNextPiece();
                 SpawnPiece();
+            }
+            //Piece droped and finished
+            else if (IsPieceInFinalPosition)
+            {
+                FillRow();
             }
             //Drop piece
             else
@@ -104,6 +92,23 @@ namespace JiufenGames.TetrisAlike.Logic
                 m_currentPieceController.DropPieceTile();
             }
         }
+        private void FillRow()
+        {
+            m_userExecutingAction = true;
+
+            List<int> filledRows = m_currentPieceController.CheckTileBelow(ref m_shouldSpawnNewPiece);
+            if (filledRows.Count > 0)
+            {
+                m_boardController.ClearCompletedLine(filledRows);
+                m_scoreController.CleanLineAddScore(filledRows.Count);
+            }
+
+            m_userExecutingAction = false;
+
+            m_timer = m_timeBetweenFalls;
+            canStorePiece = true;
+        }
+
         #endregion Flow
 
         #region Player Behaviours
@@ -113,8 +118,6 @@ namespace JiufenGames.TetrisAlike.Logic
             {
                 if (m_currentPieceController.m_currentPieceTiles.Count > 0)
                 {
-                    m_currentPieceController.ClearCurrentPieceTiles(m_currentPieceController.m_currentPieceTiles.ToArray());
-                    m_currentPieceController.ClearCurrentPieceTiles(m_currentPieceController.m_currentProjectionPieces);
                     m_currentPieceController.m_currentPieceTiles = new List<Vector2Int>();
                     m_currentPieceController.m_currentProjectionPieces = new Vector2Int[4];
                 }
@@ -143,7 +146,6 @@ namespace JiufenGames.TetrisAlike.Logic
                 m_shouldSpawnNewPiece = true;
                 m_currentPieceController.ClearCurrentPieceTiles(m_currentPieceController.m_currentPieceTiles.ToArray());
                 m_currentPieceController.ClearCurrentPieceTiles(m_currentPieceController.m_currentProjectionPieces);
-
                 pieceToSpawn = m_storePieceController.StorePiece(m_currentPieceController.m_currentPiece);
             }
         }
@@ -152,6 +154,7 @@ namespace JiufenGames.TetrisAlike.Logic
         {
             m_currentPieceController.HardDropPiece(() =>
             {
+                FillRow();
                 m_shouldSpawnNewPiece = true;
             });
         }
@@ -168,7 +171,7 @@ namespace JiufenGames.TetrisAlike.Logic
 
         public void ResetScene()
         {
-            SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().name); 
+            SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().name);
         }
         #endregion Player Behaviours
         #endregion Methods
