@@ -24,6 +24,7 @@ namespace JiufenGames.TetrisAlike.Logic
 
         [Header("PieceSpawn")]
         [HideInInspector] public bool m_shouldSpawnNewPiece = true;
+        [HideInInspector] public bool m_spawnNewPiece = true;
         public PieceSpawner m_pieceSpawner = new PieceSpawner();
         private Piece pieceToSpawn = null;
 
@@ -31,6 +32,7 @@ namespace JiufenGames.TetrisAlike.Logic
         [HideInInspector] public bool m_userExecutingAction = false;
         [SerializeField, Range(0, 20)] public float m_timeBetweenFalls = 0.01f;
         private float m_timer = 20;
+        private int timesMovementHasBeenMade = 0;
         private bool canStorePiece = true;
         #endregion Fields
 
@@ -47,6 +49,7 @@ namespace JiufenGames.TetrisAlike.Logic
             m_storePieceController.Init();
 
             AudioManager.PlayAudio("OST_MAIN_THEME", new AudioJobOptions(new AudioFadeInfo(true, 1f), null, true));
+
         }
         #endregion Init
 
@@ -59,18 +62,15 @@ namespace JiufenGames.TetrisAlike.Logic
                 IsPieceInFinalPosition = m_currentPieceController.CheckIfPieceIsInFinalPosition();
 
             //Piece Projection
-            if (!m_shouldSpawnNewPiece)
-            {
+            if (!m_shouldSpawnNewPiece && !m_spawnNewPiece)
                 if (!IsPieceInFinalPosition)
                     m_currentPieceController.SeeWhereCurrentPieceIsDropping();
-            }
 
             m_timer += Time.deltaTime;
             if (m_timer < m_timeBetweenFalls)
                 return;
             if (m_userExecutingAction)
                 return;
-
             m_timer = 0;
 
             //Piece Spawn
@@ -83,6 +83,9 @@ namespace JiufenGames.TetrisAlike.Logic
             //Piece droped and finished
             else if (IsPieceInFinalPosition)
             {
+                if (!GivePlayerAChance())
+                    return;
+
                 FillRow();
             }
             //Drop piece
@@ -92,10 +95,10 @@ namespace JiufenGames.TetrisAlike.Logic
                 m_currentPieceController.DropPieceTile();
             }
         }
+
         private void FillRow()
         {
             m_userExecutingAction = true;
-
             List<int> filledRows = m_currentPieceController.CheckTileBelow(ref m_shouldSpawnNewPiece);
             if (filledRows.Count > 0)
             {
@@ -108,7 +111,17 @@ namespace JiufenGames.TetrisAlike.Logic
             m_timer = m_timeBetweenFalls;
             canStorePiece = true;
         }
-
+        private bool GivePlayerAChance()
+        {
+            if (timesMovementHasBeenMade < m_timeBetweenFalls * 5)
+            {
+                m_timer = 0f;
+                timesMovementHasBeenMade++;
+                return false;
+            }
+            timesMovementHasBeenMade = 0;
+            return true;
+        }
         #endregion Flow
 
         #region Player Behaviours
@@ -142,11 +155,11 @@ namespace JiufenGames.TetrisAlike.Logic
         {
             if (canStorePiece)
             {
-                canStorePiece = false;
-                m_shouldSpawnNewPiece = true;
                 m_currentPieceController.ClearCurrentPieceTiles(m_currentPieceController.m_currentPieceTiles.ToArray());
                 m_currentPieceController.ClearCurrentPieceTiles(m_currentPieceController.m_currentProjectionPieces);
                 pieceToSpawn = m_storePieceController.StorePiece(m_currentPieceController.m_currentPiece);
+                canStorePiece = false;
+                m_shouldSpawnNewPiece = true;
             }
         }
 
@@ -168,6 +181,7 @@ namespace JiufenGames.TetrisAlike.Logic
         {
             m_currentPieceController.RotatePiece(clockwise);
         }
+
 
         public void ResetScene()
         {
