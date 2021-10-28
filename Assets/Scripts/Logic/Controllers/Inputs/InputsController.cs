@@ -14,12 +14,14 @@ namespace JiufenGames.TetrisAlike.Logic
         private void Awake()
         {
             //Change This
-            if (_instance != null)
+            if (_instance == null)
             {
-                DestroyImmediate(_instance);
+                _instance = this;
             }
-
-            _instance = this;
+            else
+            {
+                DestroyImmediate(this.gameObject);
+            }
         }
 
         #endregion Singleton
@@ -29,7 +31,7 @@ namespace JiufenGames.TetrisAlike.Logic
         //Inputs Config
         [Header("Inputs Config")]
         [SerializeField] [RequireInterfaceAttribute(typeof(InputsListener))] private List<UnityEngine.Object> m_inputsListenerObject;
-        private List<InputsListener> m_inputsListener
+        public List<InputsListener> m_inputsListener
         {
             get
             {
@@ -86,6 +88,14 @@ namespace JiufenGames.TetrisAlike.Logic
                 });
             });
 
+            //No key Pressed
+            if (m_currentPressedInputs.Count == 1 && m_currentPressedInputs.Contains(TetrisInputs.NONE))
+            {
+                m_timesPressed = 0;
+                m_lastInputPressed = new List<TetrisInputs>();
+                return;
+            }
+
             // Movement of piece
             CheckIfIsPressingKey(TetrisInputs.MOVE_LEFT,
                 (inputPressed) => CheckContinuousInput(
@@ -127,12 +137,6 @@ namespace JiufenGames.TetrisAlike.Logic
                     inputPressed,
                     () => m_OnStorePiece?.Invoke()
                 ));
-            //No key Pressed
-            if (m_currentPressedInputs.Count == 1 && m_currentPressedInputs.Contains(TetrisInputs.NONE))
-            {
-                m_timesPressed = 0;
-                m_lastInputPressed = new List<TetrisInputs>();
-            }
         }
 
         #endregion Unity Events

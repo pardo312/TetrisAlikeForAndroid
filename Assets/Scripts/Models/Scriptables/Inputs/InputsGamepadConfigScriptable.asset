@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: InputsGamepadConfigScriptable
   m_EditorClassIdentifier: 
   m_none: 0
-  m_XAxis: Horizontal
-  m_YAxis: Vertical
+  m_XAxis: HorizontalJoystick
+  m_YAxis: VerticalJoystick
   m_altXAxis: HorizontalAlt
   m_altYAxis: VerticalAlt
   m_rotateClockwise: 350
