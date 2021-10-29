@@ -24,7 +24,6 @@ namespace JiufenGames.TetrisAlike.Logic
 
         [Header("PieceSpawn")]
         [HideInInspector] public bool m_shouldSpawnNewPiece = true;
-        [HideInInspector] public bool m_spawnNewPiece = true;
         public PieceSpawner m_pieceSpawner = new PieceSpawner();
         private Piece pieceToSpawn = null;
 
@@ -62,7 +61,7 @@ namespace JiufenGames.TetrisAlike.Logic
                 IsPieceInFinalPosition = m_currentPieceController.CheckIfPieceIsInFinalPosition();
 
             //Piece Projection
-            if (!m_shouldSpawnNewPiece && !m_spawnNewPiece)
+            if (!m_shouldSpawnNewPiece)
                 if (!IsPieceInFinalPosition)
                     m_currentPieceController.SeeWhereCurrentPieceIsDropping();
 
