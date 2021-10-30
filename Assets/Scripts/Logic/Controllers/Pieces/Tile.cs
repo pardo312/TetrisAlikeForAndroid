@@ -25,10 +25,6 @@ namespace JiufenGames.TetrisAlike.Logic
 
         public void ChangeColorOfTile(Color newColor, bool changeAlpha = false)
         {
-            if (m_tileRow > 20)
-            {
-                int i = 923;
-            }
             if (!changeAlpha)
             {
                 Color resetedColor = m_spriteRenderer.color;

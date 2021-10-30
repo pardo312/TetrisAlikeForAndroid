@@ -111,7 +111,7 @@ namespace JiufenGames.TetrisAlike.Logic
         }
         private bool GivePlayerAChance()
         {
-            if (timesMovementHasBeenMade < 2 )
+            if (timesMovementHasBeenMade < 1 )
             {
                 m_timer = 0f;
                 timesMovementHasBeenMade+= Time.deltaTime * 100;
