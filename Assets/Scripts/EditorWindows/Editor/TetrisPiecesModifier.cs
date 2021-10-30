@@ -34,15 +34,15 @@ public class TetrisPiecesModifier : EditorWindow
         if(_currentPiecesScriptable == null)
         {
             string[] scriptableList = AssetDatabase.FindAssets("t:" + typeof(PiecesScriptable));
-            if (scriptableList.Length == 0 || !AssetDatabase.GUIDToAssetPath(scriptableList[0]).Equals("Assets/Resources/Scriptables/PiecesScriptable.asset"))
+            if (scriptableList.Length == 0 || !AssetDatabase.GUIDToAssetPath(scriptableList[0]).Equals("Assets/Resources/Scriptables/Tetris/PiecesScriptable.asset"))
             {
-                string name = "Assets/Resources/Scriptables/PiecesScriptable.asset";
+                string name = "Assets/Resources/Scriptables/Tetris/PiecesScriptable.asset";
                 PiecesScriptable asset = ScriptableObject.CreateInstance<PiecesScriptable>();
                 AssetDatabase.CreateAsset(asset, name);
                 AssetDatabase.SaveAssets();
                 AssetDatabase.Refresh();
             }
-            _currentPiecesScriptable = (PiecesScriptable)EditorGUIUtility.Load("Assets/Resources/Scriptables/PiecesScriptable.asset");
+            _currentPiecesScriptable = (PiecesScriptable)EditorGUIUtility.Load("Assets/Resources/Scriptables/Tetris/PiecesScriptable.asset");
         }
 
         if (_currentPiecesScriptable.pieces != null)

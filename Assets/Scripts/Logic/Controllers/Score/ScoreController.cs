@@ -14,9 +14,9 @@ namespace JiufenGames.TetrisAlike.Logic
         #endregion Fields
 
         #region Methods
-        public void Init()
+        public void Init(int highScore)
         {
-            _scoreView.Init();
+            _scoreView.Init(highScore);
             _currentScore = 0;
         }
 

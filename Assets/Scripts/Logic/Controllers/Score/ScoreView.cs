@@ -6,52 +6,62 @@ namespace JiufenGames.TetrisAlike.Logic
 {
     public class ScoreView : MonoBehaviour
     {
-        [SerializeField] private Transform _rectParentScore;
-        [SerializeField] private TMP_Text _scoreValueText;
-        [SerializeField] private TMP_Text _scoreAddedText;
+        [Header("Current Score")]
+        [SerializeField] private Transform m_rectParentScore;
+        [SerializeField] private TMP_Text m_scoreValueText;
+        [SerializeField] private TMP_Text m_scoreAddedText;
 
-        public void Init()
+        [Header("High Score")]
+        [SerializeField] private Transform m_rectParentHighScore;
+        [SerializeField] private TMP_Text m_scoreValueHighText;
+
+        public void Init(int _highScore)
         {
-            _rectParentScore.gameObject.SetActive(true);
+            //Highscore
+            m_rectParentHighScore.gameObject.SetActive(true);
+            m_scoreValueHighText.text = _highScore.ToString();
+
+            //Currentscore
+            m_rectParentScore.gameObject.SetActive(true);
             ChangeScore(0);
         }
 
-        public void AddScore(int extraValue, int finalScore)
+        public void AddScore(int _extraValue, int _finalScore)
         {
-            ScoreAddedAnimation(extraValue, () => { ChangeScore(finalScore); });
+            ScoreAddedAnimation(_extraValue, () => { ChangeScore(_finalScore); });
         }
 
         private void ScoreAddedAnimation(int extraValue, Action onEndAnimation)
         {
-            _scoreAddedText.gameObject.SetActive(true);
-            _scoreAddedText.text = $"+{extraValue.ToString()}";
+            m_scoreAddedText.gameObject.SetActive(true);
+            m_scoreAddedText.text = $"+{extraValue.ToString()}";
 
             //Implement Adding animation with extra value
-            Vector3 previousPosition = _scoreAddedText.transform.position;
-            LeanTween.move(_scoreAddedText.gameObject, _scoreValueText.transform, ScoreConsts.ANIMATION_TIME_SCORE_ADDED_POSITION).setOnComplete(() =>
+            Vector3 previousPosition = m_scoreAddedText.transform.position;
+            LeanTween.move(m_scoreAddedText.gameObject, m_scoreValueText.transform, ScoreConsts.ANIMATION_TIME_SCORE_ADDED_POSITION).setOnComplete(() =>
                {
-                   Vector3 previoursScale = _scoreAddedText.transform.localScale;
+                   Vector3 previoursScale = m_scoreAddedText.transform.localScale;
 
-                   LeanTween.scale(_scoreAddedText.gameObject,
+                   LeanTween.scale(m_scoreAddedText.gameObject,
                        new Vector3(ScoreConsts.ANIMATION_VALUE_SCORE_ADDED_SCALE, ScoreConsts.ANIMATION_VALUE_SCORE_ADDED_SCALE, 0),
                        ScoreConsts.ANIMATION_TIME_SCORE_ADDED_SCALE / 2
                        ).setOnComplete(() =>
                        {
-                           LeanTween.scale(_scoreAddedText.gameObject, previoursScale, ScoreConsts.ANIMATION_TIME_SCORE_ADDED_SCALE / 2);
+                           LeanTween.scale(m_scoreAddedText.gameObject, previoursScale, ScoreConsts.ANIMATION_TIME_SCORE_ADDED_SCALE / 2);
                        });
                });
-            LeanTween.alpha(_scoreAddedText.gameObject, 0, ScoreConsts.ANIMATION_TIME_SCORE_ADDED_POSITION + ScoreConsts.ANIMATION_TIME_SCORE_ADDED_SCALE).setOnComplete(() =>
+            LeanTween.alpha(m_scoreAddedText.gameObject, 0, ScoreConsts.ANIMATION_TIME_SCORE_ADDED_POSITION + ScoreConsts.ANIMATION_TIME_SCORE_ADDED_SCALE).setOnComplete(() =>
                 {
-                    _scoreAddedText.gameObject.SetActive(false);
-                    _scoreAddedText.gameObject.LeanAlpha(1, 0);
-                    _scoreAddedText.transform.position = previousPosition;
+                    m_scoreAddedText.gameObject.SetActive(false);
+                    m_scoreAddedText.gameObject.LeanAlpha(1, 0);
+                    m_scoreAddedText.transform.position = previousPosition;
                     onEndAnimation?.Invoke();
                 });
         }
 
-        public void ChangeScore(int currentScore)
+        public void ChangeScore(int _currentScore)
         {
-            _scoreValueText.text = currentScore.ToString();
+            m_scoreValueText.text = _currentScore.ToString();
         }
 
     }

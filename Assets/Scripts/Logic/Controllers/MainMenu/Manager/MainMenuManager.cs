@@ -1,4 +1,5 @@
-using JiufenPackages.SceneFlowManager.Logic;
+using JiufenPackages.GameManager.Logic;
+using JiufenPackages.SceneFlow.Logic;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,7 +9,6 @@ public class MainMenuManager : MonoBehaviour
 {
     public void LoadGameplayScene()
     {
-        SceneFlowManager.m_instance.ChangeSceneTo(SceneNames.GAMEPLAY);
-
+        GameManager.m_instance.ChangeSceneTo(SceneNames.GAMEPLAY);
     }
 }

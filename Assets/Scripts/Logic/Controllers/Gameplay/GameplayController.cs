@@ -37,18 +37,17 @@ namespace JiufenGames.TetrisAlike.Logic
 
         #region Methods
         #region Init
-        public void Start()
+        public void Init(int highscore)
         {
             m_boardController.Init();
             m_pieceSpawner.Init();
             m_currentPieceController.Init(m_boardController);
             m_playerBehaviour.Init(this);
-            m_scoreController.Init();
+            m_scoreController.Init(highscore);
             m_nextPieceController.Init();
             m_storePieceController.Init();
 
             AudioManager.PlayAudio("OST_MAIN_THEME", new AudioJobOptions(new AudioFadeInfo(true, 1f), null, true));
-
         }
         #endregion Init
 
