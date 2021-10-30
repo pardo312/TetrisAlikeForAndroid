@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4f66a0210fa1e541b6033a424330c45, type: 3}
   m_Name: InputsKeyboardConfigScriptable
   m_EditorClassIdentifier: 
-  _inputSource: 0
   m_none: 0
   m_moveLeft: 97
   m_moveRight: 100

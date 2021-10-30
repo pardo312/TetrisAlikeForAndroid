@@ -36,10 +36,13 @@ namespace JiufenGames.TetrisAlike.Logic
         #region See Where piece is going to drop
         public void SeeWhereCurrentPieceIsDropping()
         {
-            ClearCurrentPieceTiles(m_currentProjectionPieces);
+            ClearCurrentPieceTiles(m_currentProjectionPieces, m_currentPieceTiles);
             Vector2Int[] tempCurrentPiecesTiles = new Vector2Int[m_currentPieceTiles.Count];
             m_currentPieceTiles.CopyTo(tempCurrentPiecesTiles);
-
+            if (m_currentPieceTiles.Count == 0)
+            {
+                Debug.Log("helloo");
+            }
             CheckLowestNotFilledTile(tempCurrentPiecesTiles, (lowestNotFilledTile, lowestRowInCurrentPiece) =>
              {
                  for (int j = tempCurrentPiecesTiles.Length - 1; j >= 0; j--)
@@ -261,13 +264,25 @@ namespace JiufenGames.TetrisAlike.Logic
         #endregion Movement of current Piece
 
         #region Helpers
-        public void ClearCurrentPieceTiles(Vector2Int[] tileList)
+        public void ClearCurrentPieceTiles(Vector2Int[] tileList, List<Vector2Int> collidingTileList = null)
         {
             for (int j = 0; j < 4; j++)
             {
-                if (!m_boardController._board[tileList[j].x, tileList[j].y]._isFilled)
+                if (!m_boardController._board[tileList[j].x, tileList[j].y]._isFilled )
                 {
-                    m_boardController._board[tileList[j].x, tileList[j].y].Reset();
+                    //If list of collidingPriority tiles exist the check if any of the tile list collides with this list
+                    if (collidingTileList != null )
+                    {
+                        if (!collidingTileList.Contains(tileList[j]))
+                        {
+                            m_boardController._board[tileList[j].x, tileList[j].y].Reset();
+                        }
+                    }
+                    //If it doesn't exist then just reset it right away
+                    else
+                    {
+                        m_boardController._board[tileList[j].x, tileList[j].y].Reset();
+                    }
                 }
             }
         }

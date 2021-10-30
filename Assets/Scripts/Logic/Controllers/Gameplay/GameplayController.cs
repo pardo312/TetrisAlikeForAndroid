@@ -61,9 +61,8 @@ namespace JiufenGames.TetrisAlike.Logic
                 IsPieceInFinalPosition = m_currentPieceController.CheckIfPieceIsInFinalPosition();
 
             //Piece Projection
-            if (!m_shouldSpawnNewPiece)
-                if (!IsPieceInFinalPosition)
-                    m_currentPieceController.SeeWhereCurrentPieceIsDropping();
+            if (!m_shouldSpawnNewPiece )
+                m_currentPieceController.SeeWhereCurrentPieceIsDropping();
 
             m_timer += Time.deltaTime;
             if (m_timer < m_timeBetweenFalls)
