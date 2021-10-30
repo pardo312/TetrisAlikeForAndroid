@@ -29,8 +29,8 @@ namespace JiufenGames.TetrisAlike.Logic
                 {
                     _board[i, j] = Instantiate(_tilePrefab, _tileParent.position + new Vector3(j * (1 * BoardConsts.OFFSET_TILES), i * (1 * BoardConsts.OFFSET_TILES), 0), Quaternion.identity, _tileParent);
                     _board[i, j].transform.localScale = _tileParent.localScale;
-                    _board[i, j]._tileRow = i;
-                    _board[i, j]._tileColumn = j;
+                    _board[i, j].m_tileRow = i;
+                    _board[i, j].m_tileColumn = j;
                     if (i == BoardConsts.REAL_ROWS)
                         _board[i, j].SetFirstHiddenRowPiece();
                     if (i > BoardConsts.REAL_ROWS)
@@ -67,9 +67,9 @@ namespace JiufenGames.TetrisAlike.Logic
         {
             for (int j = 0; j < BoardConsts.COLUMNS; j++)
             {
-                _board[currentLine - 1, j].ChangeColorOfTile(_board[currentLine, j]._color);
-                if (_board[currentLine, j]._isFilled)
-                    _board[currentLine - 1, j]._isFilled = true;
+                _board[currentLine - 1, j].ChangeColorOfTile(_board[currentLine, j].m_color);
+                if (_board[currentLine, j].m_isFilled)
+                    _board[currentLine - 1, j].m_isFilled = true;
             }
         }
 

@@ -31,7 +31,7 @@ namespace JiufenGames.TetrisAlike.Logic
         [HideInInspector] public bool m_userExecutingAction = false;
         [SerializeField, Range(0, 20)] public float m_timeBetweenFalls = 0.01f;
         private float m_timer = 20;
-        private int timesMovementHasBeenMade = 0;
+        private float timesMovementHasBeenMade = 0;
         private bool canStorePiece = true;
         #endregion Fields
 
@@ -61,7 +61,7 @@ namespace JiufenGames.TetrisAlike.Logic
                 IsPieceInFinalPosition = m_currentPieceController.CheckIfPieceIsInFinalPosition();
 
             //Piece Projection
-            if (!m_shouldSpawnNewPiece )
+            if (!m_shouldSpawnNewPiece)
                 m_currentPieceController.SeeWhereCurrentPieceIsDropping();
 
             m_timer += Time.deltaTime;
@@ -111,10 +111,10 @@ namespace JiufenGames.TetrisAlike.Logic
         }
         private bool GivePlayerAChance()
         {
-            if (timesMovementHasBeenMade < m_timeBetweenFalls * 5)
+            if (timesMovementHasBeenMade < 2 )
             {
                 m_timer = 0f;
-                timesMovementHasBeenMade++;
+                timesMovementHasBeenMade+= Time.deltaTime * 100;
                 return false;
             }
             timesMovementHasBeenMade = 0;

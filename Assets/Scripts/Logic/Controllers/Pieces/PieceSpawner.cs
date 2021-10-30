@@ -24,7 +24,7 @@ namespace JiufenGames.TetrisAlike.Logic
             {
                 bool rowFilled = false;
                 for (int j = 3; j <= 6; j++)
-                    if (_board[i, j]._isFilled)
+                    if (_board[i, j].m_isFilled)
                         rowFilled = true;
 
                 if (rowFilled)

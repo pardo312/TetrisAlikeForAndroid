@@ -34,8 +34,8 @@ namespace JiufenGames.TetrisAlike.Logic
                 {
                     m_4x4board[i, j] = Instantiate(m_tilePrefab, m_nextPieceTileParent.position + new Vector3(j * (1 * BoardConsts.OFFSET_TILES_NEXT_PIECE_BOARD), i * (1 * BoardConsts.OFFSET_TILES_NEXT_PIECE_BOARD), 0), Quaternion.identity, m_nextPieceTileParent);
                     m_4x4board[i, j].transform.localScale = m_nextPieceTileParent.localScale;
-                    m_4x4board[i, j]._tileRow = i;
-                    m_4x4board[i, j]._tileColumn = j;
+                    m_4x4board[i, j].m_tileRow = i;
+                    m_4x4board[i, j].m_tileColumn = j;
                 }
             }
         }

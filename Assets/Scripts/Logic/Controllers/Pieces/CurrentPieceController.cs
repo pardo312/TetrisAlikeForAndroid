@@ -39,10 +39,7 @@ namespace JiufenGames.TetrisAlike.Logic
             ClearCurrentPieceTiles(m_currentProjectionPieces, m_currentPieceTiles);
             Vector2Int[] tempCurrentPiecesTiles = new Vector2Int[m_currentPieceTiles.Count];
             m_currentPieceTiles.CopyTo(tempCurrentPiecesTiles);
-            if (m_currentPieceTiles.Count == 0)
-            {
-                Debug.Log("helloo");
-            }
+
             CheckLowestNotFilledTile(tempCurrentPiecesTiles, (lowestNotFilledTile, lowestRowInCurrentPiece) =>
              {
                  for (int j = tempCurrentPiecesTiles.Length - 1; j >= 0; j--)
@@ -63,7 +60,7 @@ namespace JiufenGames.TetrisAlike.Logic
                      }
 
                      //Show Preview tile
-                     if (!m_boardController._board[lowestNotFilledTile + (tempCurrentPiecesTiles[j].x - lowestRowInCurrentPiece), tempCurrentPiecesTiles[j].y]._isFilled)
+                     if (!m_boardController._board[lowestNotFilledTile + (tempCurrentPiecesTiles[j].x - lowestRowInCurrentPiece), tempCurrentPiecesTiles[j].y].m_isFilled)
                      {
                          Color lightVersionColor = m_currentPiece.pieceColor;
                          lightVersionColor.a = 0.1f;
@@ -88,7 +85,7 @@ namespace JiufenGames.TetrisAlike.Logic
             List<int> filledRows = new List<int>();
             for (int m = m_currentPieceTiles.Count - 1; m >= 0; m--)
             {
-                m_boardController._board[m_currentPieceTiles[m].x, m_currentPieceTiles[m].y]._isFilled = true;
+                m_boardController._board[m_currentPieceTiles[m].x, m_currentPieceTiles[m].y].m_isFilled = true;
 
                 if (m_currentPieceTiles[m].x < BoardConsts.REAL_ROWS - 1)
                     _shouldSpawnNewPiece = true;
@@ -115,7 +112,7 @@ namespace JiufenGames.TetrisAlike.Logic
                 currentRowFilled = true;
                 for (int j = 0; j < BoardConsts.COLUMNS; j++)
                 {
-                    if (!m_boardController._board[i, j]._isFilled)
+                    if (!m_boardController._board[i, j].m_isFilled)
                         currentRowFilled = false;
                 }
 
@@ -150,7 +147,7 @@ namespace JiufenGames.TetrisAlike.Logic
             for (int k = 0; k < tempCurrentPiecesTiles.Length; k++)
                 if (!(tempCurrentPiecesTiles[k].x + offsetX >= 0 && tempCurrentPiecesTiles[k].x + offsetX < BoardConsts.TOTAL_ROWS &&
                     tempCurrentPiecesTiles[k].y + offsetY >= 0 && tempCurrentPiecesTiles[k].y + offsetY < BoardConsts.COLUMNS &&
-                    !m_boardController._board[tempCurrentPiecesTiles[k].x + offsetX, tempCurrentPiecesTiles[k].y + offsetY]._isFilled))
+                    !m_boardController._board[tempCurrentPiecesTiles[k].x + offsetX, tempCurrentPiecesTiles[k].y + offsetY].m_isFilled))
                     return false;
 
             //Reset the previours currentTiles 
@@ -238,7 +235,7 @@ namespace JiufenGames.TetrisAlike.Logic
                             return;
                         }
 
-                        if (m_boardController._board[tileRow, tileColumn]._isFilled)
+                        if (m_boardController._board[tileRow, tileColumn].m_isFilled)
                         {
                             //If any of the tiles collide with a filled tile after the rotation, put the piece one row above the current.
                             m_piece4x4CubeStartTile += new Vector2Int(1, 0);
@@ -268,7 +265,7 @@ namespace JiufenGames.TetrisAlike.Logic
         {
             for (int j = 0; j < 4; j++)
             {
-                if (!m_boardController._board[tileList[j].x, tileList[j].y]._isFilled )
+                if (!m_boardController._board[tileList[j].x, tileList[j].y].m_isFilled )
                 {
                     //If list of collidingPriority tiles exist the check if any of the tile list collides with this list
                     if (collidingTileList != null )
@@ -291,7 +288,7 @@ namespace JiufenGames.TetrisAlike.Logic
         {
             bool pieceFinalPosition = false;
             for (int k = m_currentPieceTiles.Count - 1; k >= 0; k--)
-                if (m_currentPieceTiles[k].x == 0 || m_boardController._board[m_currentPieceTiles[k].x - 1, m_currentPieceTiles[k].y]._isFilled)
+                if (m_currentPieceTiles[k].x == 0 || m_boardController._board[m_currentPieceTiles[k].x - 1, m_currentPieceTiles[k].y].m_isFilled)
                     pieceFinalPosition = true;
             return pieceFinalPosition;
         }
@@ -305,7 +302,7 @@ namespace JiufenGames.TetrisAlike.Logic
             {
                 for (int j = _currenPieceTiles[k].x - 1; j >= 0; j--)
                 {
-                    if (m_boardController._board[j, _currenPieceTiles[k].y]._isFilled && j + 1 >= lowestNotFilledTile)
+                    if (m_boardController._board[j, _currenPieceTiles[k].y].m_isFilled && j + 1 >= lowestNotFilledTile)
                     {
                         if ((j + 1 > lowestNotFilledTile || _currenPieceTiles[k].x <= lowestRowInCurrentPiece || lowestRowInCurrentPiece == -1))
                         {
@@ -314,7 +311,7 @@ namespace JiufenGames.TetrisAlike.Logic
                             for (int k2 = _currenPieceTiles.Length - 1; k2 >= 0; k2--)
                             {
                                 int nextPositionOfTile = (j + 1) + (_currenPieceTiles[k2].x - _currenPieceTiles[k].x);
-                                if (nextPositionOfTile < 0 || m_boardController._board[nextPositionOfTile, _currenPieceTiles[k2].y]._isFilled)
+                                if (nextPositionOfTile < 0 || m_boardController._board[nextPositionOfTile, _currenPieceTiles[k2].y].m_isFilled)
                                 {
                                     doesAllTilesInCurrentPieceFitLowest = false;
                                     break;
@@ -353,7 +350,7 @@ namespace JiufenGames.TetrisAlike.Logic
                     int tileColumn = j + m_piece4x4CubeStartTile.y;
                     if (tileRow >= 0 && tileRow < BoardConsts.TOTAL_ROWS && tileColumn >= 0 && tileColumn < BoardConsts.COLUMNS)
                     {
-                        if (!m_boardController._board[tileRow, tileColumn]._isFilled)
+                        if (!m_boardController._board[tileRow, tileColumn].m_isFilled)
                             m_boardController._board[tileRow, tileColumn].Reset();
                     }
                 }

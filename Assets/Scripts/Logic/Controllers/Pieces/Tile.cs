@@ -5,61 +5,63 @@ namespace JiufenGames.TetrisAlike.Logic
 {
     public class Tile : MonoBehaviour
     {
-        public int _tileRow;
-        public int _tileColumn;
+        public int m_tileRow;
+        public int m_tileColumn;
 
-        public bool _isFilled;
+        public bool m_isFilled;
 
-        private SpriteRenderer _spriteRenderer;
+        private SpriteRenderer m_spriteRenderer;
 
-        [HideInInspector] public Color _color;
+        [HideInInspector] public Color m_color;
 
-        public bool _isPartOfHiddenBoard = false;
-        public bool _isPartOfFirstRowAfterRealBoard = false;
+        public bool m_isPartOfHiddenBoard = false;
+        public bool m_isPartOfFirstRowAfterRealBoard = false;
 
         public void Awake()
         {
-            _spriteRenderer = GetComponent<SpriteRenderer>();
-            _color = BoardConsts.DEFAULT_COLOR;
+            m_spriteRenderer = GetComponent<SpriteRenderer>();
+            m_color = BoardConsts.DEFAULT_COLOR;
         }
 
         public void ChangeColorOfTile(Color newColor, bool changeAlpha = false)
         {
+            if (m_tileRow > 20)
+            {
+                int i = 923;
+            }
             if (!changeAlpha)
             {
-                Color resetedColor = _spriteRenderer.color;
+                Color resetedColor = m_spriteRenderer.color;
                 resetedColor.a = 1;
-                _spriteRenderer.color = resetedColor;
+                m_spriteRenderer.color = resetedColor;
             }
 
-            if (((_isPartOfFirstRowAfterRealBoard || _isPartOfHiddenBoard) && newColor.Equals(BoardConsts.DEFAULT_COLOR)))
+            if (((m_isPartOfFirstRowAfterRealBoard && newColor.Equals(BoardConsts.DEFAULT_COLOR)) || m_isPartOfHiddenBoard))
                 newColor = Color.clear;
-            if (_isPartOfHiddenBoard && !newColor.Equals(Color.clear))
-                return;
-            _color = newColor;
-            _spriteRenderer.color = _color;
+            m_color = newColor;
+            m_spriteRenderer.color = m_color;
 
         }
 
         public void Reset()
         {
-            if (_isPartOfFirstRowAfterRealBoard)
+            if (m_isPartOfFirstRowAfterRealBoard)
                 ChangeColorOfTile(Color.clear);
-            else if (!_isPartOfHiddenBoard)
+            else if (!m_isPartOfHiddenBoard)
                 ChangeColorOfTile(BoardConsts.DEFAULT_COLOR);
 
-            _isFilled = false;
+            m_isFilled = false;
         }
 
         public void SetPieceToBeHidden()
         {
-            _isPartOfHiddenBoard = true;
+            m_isPartOfHiddenBoard = true;
             ChangeColorOfTile(Color.clear);
         }
 
         public void SetFirstHiddenRowPiece()
         {
-            _isPartOfFirstRowAfterRealBoard = true;
+            m_isPartOfFirstRowAfterRealBoard = true;
             ChangeColorOfTile(Color.clear);
         }
     }
