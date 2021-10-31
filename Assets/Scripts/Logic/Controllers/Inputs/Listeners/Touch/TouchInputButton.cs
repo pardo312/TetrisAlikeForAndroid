@@ -1,6 +1,4 @@
 using JiufenGames.TetrisAlike.Logic;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -8,6 +6,7 @@ public class TouchInputButton : MonoBehaviour, IPointerUpHandler, IPointerDownHa
 {
     [SerializeField] private string m_inputKey = "";
     private TouchInputListenerInput m_inputsListener;
+
     public void Start()
     {
         InputsController._instance.m_inputsListener.ForEach((item) =>
@@ -28,5 +27,4 @@ public class TouchInputButton : MonoBehaviour, IPointerUpHandler, IPointerDownHa
     {
         m_inputsListener.UnPressedButton(m_inputKey);
     }
-
 }

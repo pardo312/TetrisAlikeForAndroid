@@ -8,11 +8,13 @@ namespace JiufenGames.TetrisAlike.Logic
     {
         [Header("Current Score")]
         [SerializeField] private Transform m_rectParentScore;
+
         [SerializeField] private TMP_Text m_scoreValueText;
         [SerializeField] private TMP_Text m_scoreAddedText;
 
         [Header("High Score")]
         [SerializeField] private Transform m_rectParentHighScore;
+
         [SerializeField] private TMP_Text m_scoreValueHighText;
 
         public void Init(int _highScore)
@@ -63,6 +65,5 @@ namespace JiufenGames.TetrisAlike.Logic
         {
             m_scoreValueText.text = _currentScore.ToString();
         }
-
     }
 }

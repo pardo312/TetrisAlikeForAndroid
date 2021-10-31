@@ -1,0 +1,19 @@
+{
+    "name": "GameplayScene",
+    "rootNamespace": "",
+    "references": [
+        "GUID:fb165b61cf626d24aa60bcae43107712",
+        "GUID:83fd0185659f61e4ebdd277a61cb0a9f",
+        "GUID:f2607848503d45d42ad2c2e2fd007a32",
+        "GUID:601057774799a8848b698b2d622e927f"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

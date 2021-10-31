@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace JiufenPackages.SceneFlow.Logic
+﻿namespace JiufenPackages.SceneFlow.Logic
 {
-
     public class DataResponseModel
     {
         public bool Success;

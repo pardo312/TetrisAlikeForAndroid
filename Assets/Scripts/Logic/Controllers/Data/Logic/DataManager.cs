@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,10 +7,13 @@ namespace JiufenPackages.SceneFlow.Logic
     public static class DataManager
     {
         #region Fields
+
         public static Dictionary<string, Action<object, Action<object>>> m_dataEvents = new Dictionary<string, Action<object, Action<object>>>();
+
         #endregion Fields
 
         #region Methods
+
         public static void ReadEvent(string nameOfEvent, object data, Action<object> callback = null)
         {
             if (m_dataEvents.ContainsKey(nameOfEvent))
@@ -33,6 +35,7 @@ namespace JiufenPackages.SceneFlow.Logic
         {
             m_dataEvents.Remove(nameOfEvent);
         }
+
         #endregion Methods
     }
 }

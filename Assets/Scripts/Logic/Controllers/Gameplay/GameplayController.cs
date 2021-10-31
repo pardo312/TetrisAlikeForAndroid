@@ -1,7 +1,5 @@
 ﻿using Jiufen.Audio;
 using JiufenGames.TetrisAlike.Model;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -11,48 +9,57 @@ namespace JiufenGames.TetrisAlike.Logic
     public class GameplayController : MonoBehaviour
     {
         #region Fields
+
         [Header("Controllers")]
         //Board
-        [SerializeField] BoardController m_boardController;
+        [SerializeField] private BoardController m_boardController;
+
         //Piece
-        [SerializeField] NextPieceController m_nextPieceController;
-        [SerializeField] StoredPieceController m_storePieceController;
-        CurrentPieceController m_currentPieceController = new CurrentPieceController();
-        //Other
-        PlayerBehaviour m_playerBehaviour = new PlayerBehaviour();
-        [SerializeField] ScoreController m_scoreController;
+        [SerializeField] private NextPieceController m_nextPieceController;
+
+        [SerializeField] private StoredPieceController m_storePieceController;
+        private CurrentPieceController m_currentPieceController = new CurrentPieceController();
+
+
+        [SerializeField] private ScoreController m_scoreController;
 
         [Header("PieceSpawn")]
         [HideInInspector] public bool m_shouldSpawnNewPiece = true;
+
         public PieceSpawner m_pieceSpawner = new PieceSpawner();
         private Piece pieceToSpawn = null;
 
         [Header("Gameplay")]
         [HideInInspector] public bool m_userExecutingAction = false;
+
         [SerializeField, Range(0, 20)] public float m_timeBetweenFalls = 0.01f;
         private float m_timer = 20;
         private float timesMovementHasBeenMade = 0;
         private bool canStorePiece = true;
+
         #endregion Fields
 
         #region Methods
+
         #region Init
+
         public void Init(int highscore)
         {
             m_boardController.Init();
             m_pieceSpawner.Init();
             m_currentPieceController.Init(m_boardController);
-            m_playerBehaviour.Init(this);
             m_scoreController.Init(highscore);
             m_nextPieceController.Init();
             m_storePieceController.Init();
 
             AudioManager.PlayAudio("OST_MAIN_THEME", new AudioJobOptions(new AudioFadeInfo(true, 1f), null, true));
         }
+
         #endregion Init
 
         #region Flow
-        void Update()
+
+        private void Update()
         {
             //Check if current piece is in final Position
             bool IsPieceInFinalPosition = false;
@@ -108,20 +115,23 @@ namespace JiufenGames.TetrisAlike.Logic
             m_timer = m_timeBetweenFalls;
             canStorePiece = true;
         }
+
         private bool GivePlayerAChance()
         {
-            if (timesMovementHasBeenMade < 1 )
+            if (timesMovementHasBeenMade < 1)
             {
                 m_timer = 0f;
-                timesMovementHasBeenMade+= Time.deltaTime * 100;
+                timesMovementHasBeenMade += Time.deltaTime * 100;
                 return false;
             }
             timesMovementHasBeenMade = 0;
             return true;
         }
+
         #endregion Flow
 
         #region Player Behaviours
+
         private void SpawnPiece()
         {
             if (m_currentPieceController.m_currentPieceTiles != null)
@@ -136,7 +146,6 @@ namespace JiufenGames.TetrisAlike.Logic
             m_pieceSpawner.SpawnPiece(BoardConsts.REAL_ROWS, m_boardController._board, pieceToSpawn,
                (currentPiece, piece4x4SquareTiles, currentPieceTiles) =>
                {
-
                    m_currentPieceController.m_currentPiece = currentPiece;
                    m_currentPieceController.m_piece4x4CubeStartTile = piece4x4SquareTiles;
                    m_currentPieceController.m_currentPieceTiles = currentPieceTiles;
@@ -179,12 +188,13 @@ namespace JiufenGames.TetrisAlike.Logic
             m_currentPieceController.RotatePiece(clockwise);
         }
 
-
         public void ResetScene()
         {
             SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().name);
         }
+
         #endregion Player Behaviours
+
         #endregion Methods
     }
 }

@@ -1,11 +1,4 @@
-﻿using JiufenPackages.SceneFlow.Model;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.SceneManagement;
-
-namespace JiufenPackages.SceneFlow.Logic
+﻿namespace JiufenPackages.SceneFlow.Logic
 {
     public static class SceneNames
     {

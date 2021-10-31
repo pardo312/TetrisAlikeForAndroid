@@ -1,0 +1,16 @@
+{
+    "name": "InputsModule",
+    "rootNamespace": "",
+    "references": [
+        "GUID:fe20d4c0e484c0841b2f61611ba15465"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

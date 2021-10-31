@@ -1,14 +1,12 @@
-﻿using Jiufen.Audio;
-using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace JiufenGames.TetrisAlike.Logic
 {
     public class AndroidGamepadListenerInput : MonoBehaviour, InputsListener
     {
-        [SerializeField] InputsGamepadConfigScriptable m_gamepadButtonScriptable;
+        [SerializeField] private InputsGamepadConfigScriptable m_gamepadButtonScriptable;
+
         public List<TetrisInputs> GetCurrentInputsPressed()
         {
             List<TetrisInputs> currentlyPressedKeys = new List<TetrisInputs>();
@@ -18,7 +16,6 @@ namespace JiufenGames.TetrisAlike.Logic
                 currentlyPressedKeys.Add(TetrisInputs.NONE);
             else
             {
-
                 //X-Axis
                 float XAxis = Input.GetAxis(m_gamepadButtonScriptable.m_XAxis);
 

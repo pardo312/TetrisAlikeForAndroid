@@ -1,15 +1,13 @@
-﻿using Jiufen.Audio;
-using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace JiufenGames.TetrisAlike.Logic
 {
     public class TouchInputListenerInput : MonoBehaviour, InputsListener
     {
-        [SerializeField] InputsKeyboardConfigScriptable keysScriptable;
-        List<TetrisInputs> currentlyPressedKeys = new List<TetrisInputs>();
+        [SerializeField] private InputsKeyboardConfigScriptable keysScriptable;
+        private List<TetrisInputs> currentlyPressedKeys = new List<TetrisInputs>();
+
         public List<TetrisInputs> GetCurrentInputsPressed()
         {
             if (currentlyPressedKeys.Count == 0)
@@ -17,6 +15,7 @@ namespace JiufenGames.TetrisAlike.Logic
 
             return currentlyPressedKeys;
         }
+
         public void PressedButton(string keyCode)
         {
             if (keyCode.CompareTo("MOVE_LEFT") == 0 && !currentlyPressedKeys.Contains(TetrisInputs.MOVE_LEFT))
@@ -40,6 +39,7 @@ namespace JiufenGames.TetrisAlike.Logic
             if (keyCode.CompareTo("STORE_PIECE") == 0 && !currentlyPressedKeys.Contains(TetrisInputs.STORE_PIECE))
                 currentlyPressedKeys.Add(TetrisInputs.STORE_PIECE);
         }
+
         public void UnPressedButton(string keyCode)
         {
             if (keyCode.CompareTo("MOVE_LEFT") == 0 && currentlyPressedKeys.Contains(TetrisInputs.MOVE_LEFT))

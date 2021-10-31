@@ -1,0 +1,16 @@
+{
+    "name": "GameManagerModule",
+    "rootNamespace": "",
+    "references": [
+        "GUID:f2607848503d45d42ad2c2e2fd007a32"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

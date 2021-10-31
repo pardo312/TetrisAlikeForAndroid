@@ -1,18 +1,15 @@
-﻿using Jiufen.Audio;
-using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace JiufenGames.TetrisAlike.Logic
 {
     public class KeyboardInputsListener : MonoBehaviour, InputsListener
     {
-        [SerializeField] InputsKeyboardConfigScriptable keysScriptable;
+        [SerializeField] private InputsKeyboardConfigScriptable keysScriptable;
+
         public List<TetrisInputs> GetCurrentInputsPressed()
         {
             List<TetrisInputs> currentlyPressedKeys = new List<TetrisInputs>();
-
 
             if (Input.GetKey(keysScriptable.m_none))
                 currentlyPressedKeys.Add(TetrisInputs.NONE);

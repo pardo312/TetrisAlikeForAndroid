@@ -1,7 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using JiufenPackages.SceneFlow.Logic;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace JiufenPackages.GameManager.Logic
@@ -9,11 +7,15 @@ namespace JiufenPackages.GameManager.Logic
     public class GameManager : MonoBehaviour
     {
         #region Fields
+
         private SceneFlowManager m_sceneFlowManager;
+
         #endregion Fields
 
         #region Methods
+
         #region Singleton
+
         [HideInInspector] public static GameManager m_instance;
 
         private void Awake()
@@ -29,9 +31,11 @@ namespace JiufenPackages.GameManager.Logic
                 DestroyImmediate(this.gameObject);
             }
         }
+
         #endregion Singleton
 
         #region RuntimeInit
+
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         public static void RuntimeInit()
         {
@@ -43,6 +47,7 @@ namespace JiufenPackages.GameManager.Logic
 
             SceneManager.sceneLoaded += m_instance.OnSceneLoad;
         }
+
         public void Init()
         {
             m_sceneFlowManager = GetComponentInChildren<SceneFlowManager>();
@@ -55,13 +60,14 @@ namespace JiufenPackages.GameManager.Logic
         {
             m_sceneFlowManager.InitScene(scene.name);
         }
-        
+
         public void ChangeSceneTo(string sceneName)
         {
             m_sceneFlowManager.ChangeSceneTo(sceneName);
-
         }
+
         #endregion RuntimeInit
+
         #endregion Methods
     }
 }

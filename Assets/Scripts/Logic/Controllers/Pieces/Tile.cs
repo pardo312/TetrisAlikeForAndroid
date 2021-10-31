@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace JiufenGames.TetrisAlike.Logic
 {
@@ -20,7 +19,7 @@ namespace JiufenGames.TetrisAlike.Logic
         public void Awake()
         {
             m_spriteRenderer = GetComponent<SpriteRenderer>();
-            m_color = BoardConsts.DEFAULT_COLOR;
+            m_color = PieceConsts.DEFAULT_COLOR;
         }
 
         public void ChangeColorOfTile(Color newColor, bool changeAlpha = false)
@@ -32,11 +31,10 @@ namespace JiufenGames.TetrisAlike.Logic
                 m_spriteRenderer.color = resetedColor;
             }
 
-            if (((m_isPartOfFirstRowAfterRealBoard && newColor.Equals(BoardConsts.DEFAULT_COLOR)) || m_isPartOfHiddenBoard))
+            if (((m_isPartOfFirstRowAfterRealBoard && newColor.Equals(PieceConsts.DEFAULT_COLOR)) || m_isPartOfHiddenBoard))
                 newColor = Color.clear;
             m_color = newColor;
             m_spriteRenderer.color = m_color;
-
         }
 
         public void Reset()
@@ -44,7 +42,7 @@ namespace JiufenGames.TetrisAlike.Logic
             if (m_isPartOfFirstRowAfterRealBoard)
                 ChangeColorOfTile(Color.clear);
             else if (!m_isPartOfHiddenBoard)
-                ChangeColorOfTile(BoardConsts.DEFAULT_COLOR);
+                ChangeColorOfTile(PieceConsts.DEFAULT_COLOR);
 
             m_isFilled = false;
         }

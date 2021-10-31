@@ -1,19 +1,18 @@
-﻿using JiufenGames.TetrisAlike.Model;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace JiufenGames.TetrisAlike.Logic
 {
     public class ScoreController : MonoBehaviour
     {
         #region Fields
+
         private int _currentScore = 0;
         [SerializeField] private ScoreView _scoreView;
+
         #endregion Fields
 
         #region Methods
+
         public void Init(int highScore)
         {
             _scoreView.Init(highScore);

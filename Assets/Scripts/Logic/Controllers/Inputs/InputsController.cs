@@ -31,6 +31,7 @@ namespace JiufenGames.TetrisAlike.Logic
         //Inputs Config
         [Header("Inputs Config")]
         [SerializeField] [RequireInterfaceAttribute(typeof(InputsListener))] private List<UnityEngine.Object> m_inputsListenerObject;
+
         public List<InputsListener> m_inputsListener
         {
             get
@@ -48,26 +49,32 @@ namespace JiufenGames.TetrisAlike.Logic
         //Timers
         [HideInInspector]
         public float m_initialTimeBetweenInputs = 0.8f;
+
         [HideInInspector] public float m_currentTimeBetweenInputs = 0.05f;
 
         //Delegates
         public Action<bool> m_OnMovePiece;
+
         public Action<bool> m_OnDropPiece;
         public Action<bool> m_OnRotatePiece;
         public Action m_OnStorePiece;
 
         // KeyPressed Record
         private List<TetrisInputs> m_currentPressedInputs = new List<TetrisInputs>();
+
         private List<TetrisInputs> m_lastInputPressed = new List<TetrisInputs>();
 
         //Input timing
         private int m_neededTimePresses = InputsConsts.ON_CONTINOUS_MOVEMENT_NEEDED_TIME_PRESSES_FOR_NEXT_MOVEMENT;
+
         private float m_timesPressed = 0;
 
         #endregion Variables
 
         #region Methods
+
         #region Unity Events
+
         private void Update()
         {
             HandleInputs();

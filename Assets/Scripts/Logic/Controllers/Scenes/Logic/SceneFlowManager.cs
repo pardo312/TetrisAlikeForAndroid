@@ -1,8 +1,5 @@
 using JiufenPackages.SceneFlow.Model;
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -11,13 +8,17 @@ namespace JiufenPackages.SceneFlow.Logic
     public class SceneFlowManager : MonoBehaviour
     {
         #region Fields
+
         [SerializeField] private SceneFlowConfigScriptable sceneFlowConfigScriptable;
         private Dictionary<string, IInitializable> initilizables = new Dictionary<string, IInitializable>();
         private string m_previousScene = "";
+
         #endregion Fields
 
         #region Methods
+
         #region Init
+
         public void Init()
         {
             for (int i = 0; i < GetComponents<IInitializable>().Length; i++)
@@ -25,9 +26,11 @@ namespace JiufenPackages.SceneFlow.Logic
                 this.initilizables.Add(GetComponents<IInitializable>()[i].m_sceneName, GetComponents<IInitializable>()[i]);
             }
         }
+
         #endregion Init
 
         #region Change Scene
+
         public void ChangeSceneTo(string nameOfScene)
         {
             m_previousScene = SceneManager.GetActiveScene().name;
@@ -54,9 +57,11 @@ namespace JiufenPackages.SceneFlow.Logic
                 }
             }
         }
+
         #endregion Change Scene
 
         #region LoadingScene
+
         private void ShowLoadingScene()
         {
             SceneManager.LoadSceneAsync(sceneFlowConfigScriptable.loadingScene);
@@ -69,9 +74,11 @@ namespace JiufenPackages.SceneFlow.Logic
                 SceneManager.UnloadSceneAsync(sceneFlowConfigScriptable.loadingScene);
             }
         }
+
         #endregion LoadingScene
 
         #region Init Scene
+
         public void InitScene(string sceneName)
         {
             if (sceneName != sceneFlowConfigScriptable.loadingScene)
@@ -104,7 +111,9 @@ namespace JiufenPackages.SceneFlow.Logic
             }
             return false;
         }
-        #endregion Init Scenes
+
+        #endregion Init Scene
+
         #endregion Methods
     }
 }

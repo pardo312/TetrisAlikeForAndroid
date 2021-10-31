@@ -1,5 +1,3 @@
-
-using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -8,13 +6,14 @@ namespace JiufenGames.TetrisAlike.Model
 {
     public class PieceFormSelection : EditorWindow
     {
-
         private const int LEFT_PANEL_WIDTH = 120;
+
         public static void InitPieceFormSelection()
         {
             TetrisPiecesModifier.Instance._onShowPieceForm += ShowPieceForm;
             TetrisPiecesModifier.Instance._onChangePiece += () => { currentPieceForm = 0; previousPieceForm = 0; };
         }
+
         public static List<string> PieceFormOptions = new List<string>();
         public static int currentPieceForm = 0;
         public static int previousPieceForm = 0;

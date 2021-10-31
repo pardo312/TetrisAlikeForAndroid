@@ -1,6 +1,3 @@
-using JiufenGames.TetrisAlike.Model;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,17 +6,19 @@ namespace JiufenGames.TetrisAlike.Logic
     public class BoardController : MonoBehaviour
     {
         #region Variables
+
         [Header("Necessary References")]
         [SerializeField] private Tile _tilePrefab;
+
         [SerializeField] private Transform _tileParent;
 
         [Header("Board")]
         [HideInInspector] public Tile[,] _board;
 
-
-        #endregion
+        #endregion Variables
 
         #region Init
+
         public void Init()
         {
             //3 EmptyRows To handle final round pieces.
@@ -36,7 +35,6 @@ namespace JiufenGames.TetrisAlike.Logic
                     if (i > BoardConsts.REAL_ROWS)
                         _board[i, j].SetPieceToBeHidden();
                 }
-
         }
 
         public void ClearCompletedLine(List<int> filledRows)
@@ -73,6 +71,6 @@ namespace JiufenGames.TetrisAlike.Logic
             }
         }
 
-        #endregion
+        #endregion Init
     }
 }

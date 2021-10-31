@@ -1,0 +1,17 @@
+{
+    "name": "PlayerBehaviourModule",
+    "rootNamespace": "",
+    "references": [
+        "GUID:fb165b61cf626d24aa60bcae43107712",
+        "GUID:6cd8721a821347543974669685b9df95"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

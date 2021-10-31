@@ -1,10 +1,4 @@
-﻿using JiufenGames.TetrisAlike.Model;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace JiufenGames.TetrisAlike.Logic
+﻿namespace JiufenGames.TetrisAlike.Logic
 {
     public static class ScoreConsts
     {
@@ -15,6 +9,7 @@ namespace JiufenGames.TetrisAlike.Logic
 
         //Score View
         public const float ANIMATION_TIME_SCORE_ADDED_POSITION = 1f;
+
         public const float ANIMATION_TIME_SCORE_ADDED_SCALE = 0.5f;
 
         public const float ANIMATION_VALUE_SCORE_ADDED_SCALE = 2f;
