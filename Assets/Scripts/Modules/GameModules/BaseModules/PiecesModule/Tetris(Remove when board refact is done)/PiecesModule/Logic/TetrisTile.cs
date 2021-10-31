@@ -55,7 +55,7 @@ namespace JiufenGames.TetrisAlike.Logic
 
                 m_spriteRenderer.color = newTileData.Color;
             }
-            if (_methodParams.Length >=1 && _methodParams[1] != null)
+            if (_methodParams.Length >=2 && _methodParams[1] != null)
             {
                 newTileData.IsFilled = (bool)_methodParams[1];
             }
