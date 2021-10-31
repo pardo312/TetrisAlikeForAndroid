@@ -12,7 +12,7 @@ namespace JiufenGames.TetrisAlike.Logic
             //InitializePieceSpawner
         }
 
-        public void SpawnPiece(int _realRows, Tile[,] _board, Piece _nextPiece, Action<Piece, Vector2Int, List<Vector2Int>> callback = null)
+        public void SpawnPiece(int _realRows, HideableTileBase[,] _board, Piece _nextPiece, Action<Piece, Vector2Int, List<Vector2Int>> callback = null)
         {
             List<Vector2Int> currentPieceTiles = new List<Vector2Int>();
 
@@ -23,7 +23,7 @@ namespace JiufenGames.TetrisAlike.Logic
             {
                 bool rowFilled = false;
                 for (int j = 3; j <= 6; j++)
-                    if (_board[i, j].m_isFilled) rowFilled = true;
+                    if (((TetrisTileData)_board[i, j].m_tileData).IsFilled) rowFilled = true;
 
                 if (rowFilled)
                     offset++;
@@ -38,7 +38,7 @@ namespace JiufenGames.TetrisAlike.Logic
                         if (offset > highestOffset)
                             piece4x4SquareTiles = new Vector2Int(i + offset - 4, 3);
 
-                        _board[i + offset, j].ChangeColorOfTile(_nextPiece.pieceColor);
+                        _board[i + offset, j].ChangeTileData(new object[2] { _nextPiece.pieceColor, null });
                         currentPieceTiles.Add(new Vector2Int(i + offset, j));
                     }
             }

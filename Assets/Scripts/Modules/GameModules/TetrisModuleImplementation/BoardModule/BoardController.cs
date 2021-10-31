@@ -8,12 +8,12 @@ namespace JiufenGames.TetrisAlike.Logic
         #region Variables
 
         [Header("Necessary References")]
-        [SerializeField] private Tile _tilePrefab;
+        [SerializeField] private HideableTileBase _tilePrefab;
 
         [SerializeField] private Transform _tileParent;
 
         [Header("Board")]
-        [HideInInspector] public Tile[,] _board;
+        [HideInInspector] public HideableTileBase[,] _board;
 
         #endregion Variables
 
@@ -22,7 +22,7 @@ namespace JiufenGames.TetrisAlike.Logic
         public void Init()
         {
             //3 EmptyRows To handle final round pieces.
-            _board = new Tile[BoardConsts.TOTAL_ROWS, BoardConsts.COLUMNS];
+            _board = new HideableTileBase[BoardConsts.TOTAL_ROWS, BoardConsts.COLUMNS];
             for (int i = 0; i < BoardConsts.TOTAL_ROWS; i++)
                 for (int j = 0; j < BoardConsts.COLUMNS; j++)
                 {
@@ -49,7 +49,7 @@ namespace JiufenGames.TetrisAlike.Logic
         private void ResetLine(int row)
         {
             for (int i = 0; i < BoardConsts.COLUMNS; i++)
-                _board[row, i].Reset();
+                _board[row, i].ResetTile();
         }
 
         private void DropUpperLinesOfCurrentLine(int row)
@@ -65,9 +65,11 @@ namespace JiufenGames.TetrisAlike.Logic
         {
             for (int j = 0; j < BoardConsts.COLUMNS; j++)
             {
-                _board[currentLine - 1, j].ChangeColorOfTile(_board[currentLine, j].m_color);
-                if (_board[currentLine, j].m_isFilled)
-                    _board[currentLine - 1, j].m_isFilled = true;
+                TetrisTileData tileData = _board[currentLine, j].m_tileData as TetrisTileData;
+                _board[currentLine - 1, j].ChangeTileData(new object[2] { tileData.Color, null });
+
+                if (tileData.IsFilled)
+                    _board[currentLine - 1, j].ChangeTileData(new object[2] { null, true });
             }
         }
 

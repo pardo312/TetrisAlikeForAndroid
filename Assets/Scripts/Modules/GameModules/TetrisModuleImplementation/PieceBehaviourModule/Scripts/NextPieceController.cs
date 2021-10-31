@@ -9,7 +9,7 @@ namespace JiufenGames.TetrisAlike.Logic
         #region Fields
 
         //Data
-        public Tile[,] m_4x4board;
+        public HideableTileBase[,] m_4x4board;
 
         private Queue<Piece> m_queueofNewPieces = new Queue<Piece>();
 
@@ -17,7 +17,7 @@ namespace JiufenGames.TetrisAlike.Logic
         [SerializeField] private PiecesScriptable m_piecesTypes;
 
         [SerializeField] private Transform m_nextPieceTileParent;
-        [SerializeField] private Tile m_tilePrefab;
+        [SerializeField] private HideableTileBase m_tilePrefab;
 
         #endregion Fields
 
@@ -31,7 +31,7 @@ namespace JiufenGames.TetrisAlike.Logic
 
         private void Init4x4NextPieceBoard()
         {
-            m_4x4board = new Tile[4, 4];
+            m_4x4board = new HideableTileBase[4, 4];
             for (int i = 0; i < 4; i++)
             {
                 for (int j = 0; j < 4; j++)
@@ -53,9 +53,9 @@ namespace JiufenGames.TetrisAlike.Logic
                 for (int j = 0; j < 4; j++)
                 {
                     if (nextPiece.pieceForms[0].pieceTiles[(3 - i) + ((j) * PieceForm.PIECE_TILES_WIDTH)])
-                        m_4x4board[i, j].ChangeColorOfTile(nextPiece.pieceColor);
+                        m_4x4board[i, j].ChangeTileData(new object[2] { nextPiece.pieceColor, null });
                     else
-                        m_4x4board[i, j].ChangeColorOfTile(PieceConsts.DEFAULT_COLOR);
+                        m_4x4board[i, j].ChangeTileData(new object[2] { PieceConsts.DEFAULT_COLOR, null });
                 }
             }
         }
