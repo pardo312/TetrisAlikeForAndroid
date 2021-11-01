@@ -2,23 +2,9 @@
 
 namespace JiufenGames.TetrisAlike.Logic
 {
-    public class ScoreController : MonoBehaviour
+    public class ScoreController : ScoreControllerBase
     {
-        #region Fields
-
-        private int _currentScore = 0;
-        [SerializeField] private ScoreView _scoreView;
-
-        #endregion Fields
-
         #region Methods
-
-        public void Init(int highScore)
-        {
-            _scoreView.Init(highScore);
-            _currentScore = 0;
-        }
-
         public void CleanLineAddScore(int numberOfLines)
         {
             int scoreMultiplier = (int)ScoreConsts.SCORE_MULTIPLIER_BY_LINE * numberOfLines;
@@ -31,13 +17,6 @@ namespace JiufenGames.TetrisAlike.Logic
             //Add Score
             AddScore(finalAddedScore);
         }
-
-        public void AddScore(int extraValue)
-        {
-            _currentScore += extraValue;
-            _scoreView.AddScore(extraValue, _currentScore);
-        }
-
         #endregion Methods
     }
 }

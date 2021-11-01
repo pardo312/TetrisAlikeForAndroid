@@ -1,5 +1,6 @@
 ﻿using Jiufen.Audio;
 using JiufenGames.TetrisAlike.Model;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -26,7 +27,6 @@ namespace JiufenGames.TetrisAlike.Logic
         [Header("PieceSpawn")]
         [HideInInspector] public bool m_shouldSpawnNewPiece = true;
 
-        public PieceSpawner m_pieceSpawner = new PieceSpawner();
         private Piece pieceToSpawn = null;
 
         [Header("Gameplay")]
@@ -46,12 +46,17 @@ namespace JiufenGames.TetrisAlike.Logic
         public void Init(int highscore)
         {
             m_boardController.Init();
-            m_pieceSpawner.Init();
             m_currentPieceController.Init(m_boardController);
             m_scoreController.Init(highscore);
             m_nextPieceController.Init();
             m_storePieceController.Init();
 
+            StartCoroutine(PlayInitialMusic());
+        }
+
+        IEnumerator PlayInitialMusic()
+        {
+            yield return new WaitForEndOfFrame();
             AudioManager.PlayAudio("OST_MAIN_THEME", new AudioJobOptions(new AudioFadeInfo(true, 1f), null, true));
         }
 
@@ -106,7 +111,6 @@ namespace JiufenGames.TetrisAlike.Logic
             List<int> filledRows = m_currentPieceController.CheckTileBelow(ref m_shouldSpawnNewPiece);
             if (filledRows.Count > 0)
             {
-                m_boardController.ClearCompletedLine(filledRows);
                 m_scoreController.CleanLineAddScore(filledRows.Count);
             }
 

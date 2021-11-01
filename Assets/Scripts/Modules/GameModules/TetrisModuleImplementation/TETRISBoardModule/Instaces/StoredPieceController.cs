@@ -35,25 +35,10 @@ namespace JiufenGames.TetrisAlike.Logic
                 deStoredPiece = m_queueofStored.Dequeue();
 
             m_queueofStored.Enqueue(piece);
-            ShowStoredPiece(piece);
+            SpawnPiece(4, 4, piece);
 
             return deStoredPiece;
         }
-
-        private void ShowStoredPiece(Piece storedPiece)
-        {
-            for (int i = 0; i < 4; i++)
-            {
-                for (int j = 0; j < 4; j++)
-                {
-                    if (storedPiece.pieceForms[0].pieceTiles[(3 - i) + ((j) * PieceForm.PIECE_TILES_WIDTH)])
-                        m_board[i, j].ChangeTileData(new object[2] { storedPiece.pieceColor, null });
-                    else
-                        m_board[i, j].ChangeTileData(new object[2] { PieceConsts.DEFAULT_COLOR, null });
-                }
-            }
-        }
-
         #endregion Methods
     }
 }

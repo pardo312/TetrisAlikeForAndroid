@@ -4,7 +4,15 @@ using UnityEngine;
 
 namespace JiufenGames.TetrisAlike.Logic
 {
-    public class ScoreView : MonoBehaviour
+    public interface IScoreView
+    {
+        void Init(object _initialData);
+        void AddScore(float _finalScore, float _extraValue, object[] _extraParams = null);
+        void RemoveScore(float _finalScore, float _removeValue, object[] _extraParams = null);
+        void ChangeScore(float _finalScore);
+    }
+
+    public class ScoreView : MonoBehaviour,IScoreView
     {
         [Header("Current Score")]
         [SerializeField] private Transform m_rectParentScore;
@@ -17,20 +25,23 @@ namespace JiufenGames.TetrisAlike.Logic
 
         [SerializeField] private TMP_Text m_scoreValueHighText;
 
-        public void Init(int _highScore)
+        public void Init(object _initialData)
         {
             //Highscore
             m_rectParentHighScore.gameObject.SetActive(true);
-            m_scoreValueHighText.text = _highScore.ToString();
+            m_scoreValueHighText.text = _initialData.ToString();
 
             //Currentscore
             m_rectParentScore.gameObject.SetActive(true);
-            ChangeScore(0);
         }
 
-        public void AddScore(int _extraValue, int _finalScore)
+        public void AddScore(float _finalScore, float _extraValue, object[] _extraParams = null)
         {
-            ScoreAddedAnimation(_extraValue, () => { ChangeScore(_finalScore); });
+            if (_extraParams != null)
+            {
+                m_scoreAddedText.rectTransform.anchoredPosition = (Vector2)_extraParams[0];
+            }
+            ScoreAddedAnimation((int)_extraValue, () => { ChangeScore(_finalScore); });
         }
 
         private void ScoreAddedAnimation(int extraValue, Action onEndAnimation)
@@ -61,9 +72,15 @@ namespace JiufenGames.TetrisAlike.Logic
                 });
         }
 
-        public void ChangeScore(int _currentScore)
+        public void ChangeScore(float _finalScore)
         {
-            m_scoreValueText.text = _currentScore.ToString();
+            m_scoreValueText.text = _finalScore.ToString();
         }
+
+        public void RemoveScore(float _finalScore, float _removeValue, object[] _extraParams = null)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }

@@ -6,7 +6,7 @@ using Random = UnityEngine.Random;
 
 namespace JiufenGames.TetrisAlike.Logic
 {
-    public class NextPieceController : BoardTetrisControllerBase 
+    public class NextPieceController : BoardTetrisControllerBase
     {
         #region Fields
 
@@ -23,10 +23,10 @@ namespace JiufenGames.TetrisAlike.Logic
         public override void Init()
         {
             m_queueofNewPieces.Enqueue(m_piecesTypes.pieces[Random.Range(0, m_piecesTypes.pieces.Length)]);
-            CreateBoard(4,4,BoardConsts.OFFSET_TILES_NEXT_PIECE_BOARD);
+            CreateBoard(4, 4, BoardConsts.OFFSET_TILES_NEXT_PIECE_BOARD);
         }
 
-        public override void CreateBoard(int _rows, int _columns,float _offsetTiles = 1,Action<int, int> _createdTile = null)
+        public override void CreateBoard(int _rows, int _columns, float _offsetTiles = 1, Action<int, int> _createdTile = null)
         {
             base.CreateBoard(_rows, _columns, _offsetTiles, _createdTile);
             _createdTile += (row, column) =>
@@ -39,7 +39,7 @@ namespace JiufenGames.TetrisAlike.Logic
         public void ShowNextPiece()
         {
             Piece nextPiece = m_queueofNewPieces.Peek();
-
+            SpawnPiece(4, 4, nextPiece);
         }
 
         public Piece GetNextPiece()

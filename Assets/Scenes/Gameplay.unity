@@ -802,7 +802,7 @@ GameObject:
   - component: {fileID: 517329405}
   - component: {fileID: 517329404}
   m_Layer: 5
-  m_Name: ScoreDisplay
+  m_Name: ScoreDisplay_Container
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1093,7 +1093,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -239.97, y: -39}
+  m_AnchoredPosition: {x: -239.96997, y: -39}
   m_SizeDelta: {x: 199.9656, y: 172.3517}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!114 &718122922
@@ -1171,7 +1171,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 793928149}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.91999996, y: 5.0049, z: 0}
+  m_LocalPosition: {x: 0.91999996, y: 3.634901, z: 0}
   m_LocalScale: {x: 0.87337524, y: 0.87337524, z: 0.87337524}
   m_Children:
   - {fileID: 371708374}
@@ -1188,7 +1188,7 @@ GameObject:
   m_Component:
   - component: {fileID: 874236070}
   m_Layer: 5
-  m_Name: ScorePanel
+  m_Name: ScorePanel_Container
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1372,7 +1372,7 @@ GameObject:
   - component: {fileID: 938298136}
   - component: {fileID: 938298135}
   m_Layer: 5
-  m_Name: ScoreValue
+  m_Name: Score_Value
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1590,7 +1590,7 @@ GameObject:
   - component: {fileID: 980324548}
   - component: {fileID: 980324547}
   m_Layer: 5
-  m_Name: HighScoreDisplay
+  m_Name: HighScoreDisplay_Container
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1783,7 +1783,7 @@ GameObject:
   - component: {fileID: 1028407694}
   - component: {fileID: 1028407693}
   m_Layer: 5
-  m_Name: ScoreLabel
+  m_Name: HighScore_Label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2081,7 +2081,7 @@ GameObject:
   - component: {fileID: 1120227847}
   - component: {fileID: 1120227846}
   m_Layer: 5
-  m_Name: ScoreLabel
+  m_Name: Score_Label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2577,7 +2577,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1431195071}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 10.14, y: 18.49, z: 0}
+  m_LocalPosition: {x: 10.14, y: 17.12, z: 0}
   m_LocalScale: {x: 0.69870025, y: 0.69870025, z: 0.69870025}
   m_Children:
   - {fileID: 1591208239}
@@ -3084,7 +3084,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1580305198}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.08, y: 18.49, z: 0}
+  m_LocalPosition: {x: -2.08, y: 17.12, z: 0}
   m_LocalScale: {x: 0.69870025, y: 0.69870025, z: 0.69870025}
   m_Children:
   - {fileID: 2096106861}
@@ -3221,7 +3221,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1697393948
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3236,11 +3236,11 @@ RectTransform:
   m_Father: {fileID: 874236070}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 471.36, y: -343}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 10, y: -370}
   m_SizeDelta: {x: 202.3089, y: 110.58}
-  m_Pivot: {x: 0.49999976, y: 0.50000024}
+  m_Pivot: {x: 1, y: 1}
 --- !u!114 &1697393949
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3425,7 +3425,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ead39be2a96ffd40979fded89d5165b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _scoreView: {fileID: 895467466}
+  m_scoreViewField: {fileID: 895467466}
 --- !u!1 &1725523633
 GameObject:
   m_ObjectHideFlags: 0
@@ -3903,7 +3903,7 @@ MonoBehaviour:
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 1080, y: 2340}
-  m_ScreenMatchMode: 0
+  m_ScreenMatchMode: 1
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
@@ -3965,7 +3965,7 @@ GameObject:
   - component: {fileID: 1892586238}
   - component: {fileID: 1892586237}
   m_Layer: 5
-  m_Name: ScoreValue
+  m_Name: HighScore_Value
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace JiufenGames.TetrisAlike.Logic
 {
-    public class BoardController : BoardControllerBase<HideableTileBase>
+    public class BoardController : BoardTetrisControllerBase
     {
         #region Init
         public override void Init()
@@ -26,6 +26,39 @@ namespace JiufenGames.TetrisAlike.Logic
                 if (row > BoardConsts.REAL_ROWS)
                     m_board[row, column].SetPieceToBeHidden();
             };
+        }
+        public override void SpawnPiece(int _pieceRows, int _pieceColumns, Piece _nextPiece, Action<Piece, Vector2Int, List<Vector2Int>> callback = null)
+        {
+            List<Vector2Int> currentPieceTiles = new List<Vector2Int>();
+
+            int offset = 0;
+            int highestOffset = 0;
+            //Spawn Piece in the upper 4x4 space of the board
+            for (int i = _pieceRows - 4; i < _pieceRows; i++)
+            {
+                bool rowFilled = false;
+                for (int j = _pieceColumns - 3; j <= _pieceColumns; j++)
+                    if (((TetrisTileData)m_board[i, j].m_tileData).IsFilled)
+                        rowFilled = true;
+
+                if (rowFilled)
+                    offset++;
+            }
+
+            Vector2Int piece4x4SquareTiles = new Vector2Int(_pieceRows - 4, 3);
+            for (int i = _pieceRows - 4; i < _pieceRows; i++)
+            {
+                for (int j = 3; j <= 6; j++)
+                    if (_nextPiece.pieceForms[0].pieceTiles[((_pieceRows - 1) - i) + ((j - 3) * PieceForm.PIECE_TILES_WIDTH)])
+                    {
+                        if (offset > highestOffset)
+                            piece4x4SquareTiles = new Vector2Int(i + offset - 4, 3);
+
+                        m_board[i + offset, j].ChangeTileData(new object[2] { _nextPiece.pieceColor, null });
+                        currentPieceTiles.Add(new Vector2Int(i + offset, j));
+                    }
+            }
+            callback?.Invoke(_nextPiece, piece4x4SquareTiles, currentPieceTiles);
         }
 
         public void ClearCompletedLine(List<int> filledRows)
@@ -64,39 +97,6 @@ namespace JiufenGames.TetrisAlike.Logic
             }
         }
 
-        public void SpawnPiece(int _pieceRows,int _pieceColumns, Piece _nextPiece, Action<Piece, Vector2Int, List<Vector2Int>> callback = null)
-        {
-            List<Vector2Int> currentPieceTiles = new List<Vector2Int>();
-
-            int offset = 0;
-            int highestOffset = 0;
-            //Spawn Piece in the upper 4x4 space of the board
-            for (int i = _pieceRows- 4; i < _pieceRows; i++)
-            {
-                bool rowFilled = false;
-                for (int j = _pieceColumns-3; j <= _pieceColumns; j++)
-                    if (((TetrisTileData)m_board[i, j].m_tileData).IsFilled)
-                        rowFilled = true;
-
-                if (rowFilled)
-                    offset++;
-            }
-
-            Vector2Int piece4x4SquareTiles = new Vector2Int(_pieceRows - 4, 3);
-            for (int i = _pieceRows - 4; i < _pieceRows ; i++)
-            {
-                for (int j = 3; j <= 6; j++)
-                    if (_nextPiece.pieceForms[0].pieceTiles[((_realRows - 1) - i) + ((j - 3) * PieceForm.PIECE_TILES_WIDTH)])
-                    {
-                        if (offset > highestOffset)
-                            piece4x4SquareTiles = new Vector2Int(i + offset - 4, 3);
-
-                        m_board[i + offset, j].ChangeTileData(new object[2] { _nextPiece.pieceColor, null });
-                        currentPieceTiles.Add(new Vector2Int(i + offset, j));
-                    }
-            }
-            callback?.Invoke(_nextPiece, piece4x4SquareTiles, currentPieceTiles);
-        }
         #endregion Init
     }
 }
