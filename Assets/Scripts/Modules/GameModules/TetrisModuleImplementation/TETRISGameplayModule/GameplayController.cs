@@ -111,6 +111,7 @@ namespace JiufenGames.TetrisAlike.Logic
             List<int> filledRows = m_currentPieceController.CheckTileBelow(ref m_shouldSpawnNewPiece);
             if (filledRows.Count > 0)
             {
+                m_boardController.ClearCompletedLine(filledRows);
                 m_scoreController.CleanLineAddScore(filledRows.Count);
             }
 
@@ -132,6 +133,10 @@ namespace JiufenGames.TetrisAlike.Logic
             return true;
         }
 
+        public void ResetScene()
+        {
+            SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().name);
+        }
         #endregion Flow
 
         #region Player Behaviours
@@ -192,10 +197,6 @@ namespace JiufenGames.TetrisAlike.Logic
             m_currentPieceController.RotatePiece(clockwise);
         }
 
-        public void ResetScene()
-        {
-            SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().name);
-        }
 
         #endregion Player Behaviours
 

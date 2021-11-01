@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace JiufenGames.TetrisAlike.Logic
 {
     public class PlayerBehaviour
@@ -13,7 +15,7 @@ namespace JiufenGames.TetrisAlike.Logic
         public void Init(GameplayController gameplayController)
         {
             _gameplayController = gameplayController;
-            InputsController._instance.m_initialTimeBetweenInputs = gameplayController.m_timeBetweenFalls * 0.5f;
+            InputsControllerBase<TetrisInputs>.m_instance.m_initialTimeBetweenInputs = gameplayController.m_timeBetweenFalls * 0.5f;
 
             DesuscribreInputsEvents();
             SuscribeInputEvents();
@@ -21,42 +23,64 @@ namespace JiufenGames.TetrisAlike.Logic
 
         private void DesuscribreInputsEvents()
         {
-            InputsController._instance.m_OnMovePiece -= MovePiece;
-            InputsController._instance.m_OnDropPiece -= DropPiece;
-            InputsController._instance.m_OnRotatePiece -= RotatePiece;
-            InputsController._instance.m_OnStorePiece -= StorePiece;
+            InputsController.m_instance.m_actionsDictionary[InputsTetrisActionsConsts.ON_MOVE_PIECE] -= MovePiece;
+            InputsController.m_instance.m_actionsDictionary[InputsTetrisActionsConsts.ON_DROP_PIECE] -= DropPiece;
+            InputsController.m_instance.m_actionsDictionary[InputsTetrisActionsConsts.ON_ROTATE_PIECE] -= RotatePiece;
+            InputsController.m_instance.m_actionsDictionary[InputsTetrisActionsConsts.ON_STORE_PIECE] -= StorePiece;
         }
 
         private void SuscribeInputEvents()
         {
-            InputsController._instance.m_OnMovePiece += MovePiece;
-            InputsController._instance.m_OnDropPiece += DropPiece;
-            InputsController._instance.m_OnRotatePiece += RotatePiece;
-            InputsController._instance.m_OnStorePiece += StorePiece;
+            InputsController.m_instance.m_actionsDictionary[InputsTetrisActionsConsts.ON_MOVE_PIECE] += MovePiece;
+            InputsController.m_instance.m_actionsDictionary[InputsTetrisActionsConsts.ON_DROP_PIECE] += DropPiece;
+            InputsController.m_instance.m_actionsDictionary[InputsTetrisActionsConsts.ON_ROTATE_PIECE] += RotatePiece;
+            InputsController.m_instance.m_actionsDictionary[InputsTetrisActionsConsts.ON_STORE_PIECE] += StorePiece;
         }
 
         #endregion Init
 
-        private void MovePiece(bool toLeft)
+        private void MovePiece(object[] _methodParams)
         {
             if (_gameplayController.m_shouldSpawnNewPiece)
                 return;
 
+            bool toLeft = false;
+            if (_methodParams != null && _methodParams.Length == 1)
+            {
+                toLeft = (bool)_methodParams[0];
+            }
+            else
+            {
+                Debug.LogError("_methodParams of movepiece not sended correctly");
+                return;
+            }
+
             _gameplayController.m_userExecutingAction = true;
 
             int direction = 1;
-            if (toLeft)
-                direction = -1;
+                if (toLeft)
+                    direction = -1;
 
             _gameplayController.MovePiecesInSomeDirection(0, direction);
 
             _gameplayController.m_userExecutingAction = false;
         }
 
-        private void DropPiece(bool softDrop)
+        private void DropPiece(object[] _methodParams)
         {
             if (_gameplayController.m_shouldSpawnNewPiece)
                 return;
+
+            bool softDrop = false;
+            if (_methodParams != null && _methodParams.Length == 1)
+            {
+                softDrop = (bool)_methodParams[0];
+            }
+            else
+            {
+                Debug.LogError("_methodParams of movepiece not sended correctly");
+                return;
+            }
 
             _gameplayController.m_userExecutingAction = true;
             if (softDrop)
@@ -67,17 +91,27 @@ namespace JiufenGames.TetrisAlike.Logic
             _gameplayController.m_userExecutingAction = false;
         }
 
-        private void RotatePiece(bool clockwise)
+        private void RotatePiece(object[] _methodParams)
         {
             if (_gameplayController.m_shouldSpawnNewPiece)
                 return;
 
+            bool clockwise = false;
+            if (_methodParams != null && _methodParams.Length == 1)
+            {
+                clockwise = (bool)_methodParams[0];
+            }
+            else
+            {
+                Debug.LogError("_methodParams of movepiece not sended correctly");
+                return;
+            }
             _gameplayController.m_userExecutingAction = true;
             _gameplayController.RotatePiece(clockwise);
             _gameplayController.m_userExecutingAction = false;
         }
 
-        private void StorePiece()
+        private void StorePiece(object[] _methodParams)
         {
             if (_gameplayController.m_shouldSpawnNewPiece)
                 return;

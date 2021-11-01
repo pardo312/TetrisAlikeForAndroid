@@ -1,10 +1,8 @@
 {
-    "name": "PlayerBehaviourModule",
+    "name": "TetrisInputsModule",
     "rootNamespace": "",
     "references": [
-        "GUID:fb165b61cf626d24aa60bcae43107712",
-        "GUID:6cd8721a821347543974669685b9df95",
-        "GUID:9ede68891452b5e488bcff4623166c1c"
+        "GUID:6cd8721a821347543974669685b9df95"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

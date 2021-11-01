@@ -2,8 +2,8 @@
 
 namespace JiufenGames.TetrisAlike.Logic
 {
-    public interface InputsListener
+    public interface InputsListener<T>
     {
-        List<TetrisInputs> GetCurrentInputsPressed();
+        List<T> GetCurrentInputsPressed();
     }
 }
