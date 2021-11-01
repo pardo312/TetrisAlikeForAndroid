@@ -1,11 +1,11 @@
 {
-    "name": "GameplayModule",
+    "name": "PieceBehaviour",
     "rootNamespace": "",
     "references": [
+        "GUID:365873111a27770449e613c7c9f7c4bf",
+        "GUID:ea1edfd02eb3e324d91c0694e651ec5a",
         "GUID:adb69e5549adc3d448e98c908a735c39",
-        "GUID:4df5349bf3f31574ab6a1a9874506772",
-        "GUID:82d833141ff0bb244b6c7028ab29e6d6",
-        "GUID:365873111a27770449e613c7c9f7c4bf"
+        "GUID:951ce8ac476c21144aad0fba6c342148"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

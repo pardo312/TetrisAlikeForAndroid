@@ -652,9 +652,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80550bb963d64fa468ae11253f929d64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_tilePrefabField: {fileID: 6272846969044427284, guid: 991cd81ac69a2454396c315ce2c699c3, type: 3}
+  m_tileParentField: {fileID: 1431195072}
   m_piecesTypes: {fileID: 11400000, guid: 3ae9c107c18835545839e26141575473, type: 2}
-  m_nextPieceTileParent: {fileID: 1431195072}
-  m_tilePrefab: {fileID: 6272846969044427285, guid: 991cd81ac69a2454396c315ce2c699c3, type: 3}
 --- !u!1 &441512952
 GameObject:
   m_ObjectHideFlags: 0
@@ -2820,8 +2820,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89879a1926a728849aa35ef78d8631d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _tilePrefab: {fileID: 6272846969044427285, guid: 991cd81ac69a2454396c315ce2c699c3, type: 3}
-  _tileParent: {fileID: 793928150}
+  m_tilePrefabField: {fileID: 6272846969044427284, guid: 991cd81ac69a2454396c315ce2c699c3, type: 3}
+  m_tileParentField: {fileID: 793928150}
 --- !u!4 &1483877067
 Transform:
   m_ObjectHideFlags: 0
@@ -3649,8 +3649,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f8827fda30b0a7478a2289838615c84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_storePieceTilesParent: {fileID: 1580305199}
-  m_tilePrefab: {fileID: 6272846969044427285, guid: 991cd81ac69a2454396c315ce2c699c3, type: 3}
+  m_tilePrefabField: {fileID: 6272846969044427284, guid: 991cd81ac69a2454396c315ce2c699c3, type: 3}
+  m_tileParentField: {fileID: 1580305199}
 --- !u!1 &1833742881
 GameObject:
   m_ObjectHideFlags: 0

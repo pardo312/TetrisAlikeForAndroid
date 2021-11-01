@@ -143,7 +143,7 @@ namespace JiufenGames.TetrisAlike.Logic
                 }
             }
 
-            m_pieceSpawner.SpawnPiece(BoardConsts.REAL_ROWS, m_boardController._board, pieceToSpawn,
+            m_boardController.SpawnPiece(BoardConsts.REAL_ROWS, 6, pieceToSpawn,
                (currentPiece, piece4x4SquareTiles, currentPieceTiles) =>
                {
                    m_currentPieceController.m_currentPiece = currentPiece;

@@ -1,9 +1,9 @@
 {
-    "name": "PieceBehaviour",
+    "name": "BoardModule",
     "rootNamespace": "",
     "references": [
-        "GUID:365873111a27770449e613c7c9f7c4bf",
-        "GUID:adb69e5549adc3d448e98c908a735c39"
+        "GUID:ea1edfd02eb3e324d91c0694e651ec5a",
+        "GUID:365873111a27770449e613c7c9f7c4bf"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

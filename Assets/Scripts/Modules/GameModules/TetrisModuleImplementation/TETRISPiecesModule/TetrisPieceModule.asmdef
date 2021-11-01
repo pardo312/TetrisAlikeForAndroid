@@ -1,5 +1,5 @@
 {
-    "name": "BoardModule",
+    "name": "TetrisPieceModule",
     "rootNamespace": "",
     "references": [
         "GUID:365873111a27770449e613c7c9f7c4bf"
