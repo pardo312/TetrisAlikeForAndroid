@@ -28,7 +28,7 @@ namespace JiufenGames.TetrisAlike.Logic
         public virtual void AddScore(float _extraValue, object[] _extraParams = null)
         {
             m_currentScore += (int)_extraValue;
-            m_scoreView.AddScore(_extraValue, m_currentScore, _extraParams);
+            m_scoreView.AddScore(m_currentScore, _extraValue, _extraParams);
         }
 
         public void RemoveScore(float _removeValue, object[] _extraParams = null)

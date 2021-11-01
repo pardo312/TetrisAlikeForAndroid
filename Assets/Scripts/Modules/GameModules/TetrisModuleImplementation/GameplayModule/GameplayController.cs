@@ -16,9 +16,9 @@ namespace JiufenGames.TetrisAlike.Logic
         [SerializeField] private BoardController m_boardController;
 
         //Piece
-        [SerializeField] private NextPieceController m_nextPieceController;
+        [SerializeField] private NextPieceBoardController m_nextPieceController;
 
-        [SerializeField] private StoredPieceController m_storePieceController;
+        [SerializeField] private StoredPieceBoardController m_storePieceController;
         private CurrentPieceController m_currentPieceController = new CurrentPieceController();
 
 

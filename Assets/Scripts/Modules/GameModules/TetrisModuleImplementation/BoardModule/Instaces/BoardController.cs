@@ -14,10 +14,9 @@ namespace JiufenGames.TetrisAlike.Logic
             CreateBoard(BoardConsts.TOTAL_ROWS, BoardConsts.COLUMNS, BoardConsts.OFFSET_TILES);
         }
 
-        public override void CreateBoard(int _rows, int _columns, float _offsetTiles = 1, Action<int, int> _createdTile = null)
+        public override void CreateBoard(int _rows, int _columns, float _offsetTiles = 1,  Action<int, int> _createdTile = null)
         {
-            base.CreateBoard(_rows, _columns, _offsetTiles, _createdTile);
-            _createdTile += (row, column) =>
+            base.CreateBoard(_rows, _columns, _offsetTiles, (row, column)=>
             {
                 m_board[row, column].m_tileRow = row;
                 m_board[row, column].m_tileColumn = column;
@@ -25,8 +24,11 @@ namespace JiufenGames.TetrisAlike.Logic
                     m_board[row, column].SetFirstHiddenRowPiece();
                 if (row > BoardConsts.REAL_ROWS)
                     m_board[row, column].SetPieceToBeHidden();
-            };
+            });
         }
+        #endregion Init
+
+        #region Spawn
         public override void SpawnPiece(int _pieceRows, int _pieceColumns, Piece _nextPiece, Action<Piece, Vector2Int, List<Vector2Int>> callback = null)
         {
             List<Vector2Int> currentPieceTiles = new List<Vector2Int>();
@@ -60,7 +62,9 @@ namespace JiufenGames.TetrisAlike.Logic
             }
             callback?.Invoke(_nextPiece, piece4x4SquareTiles, currentPieceTiles);
         }
+        #endregion Spawn
 
+        #region Line manipulation
         public void ClearCompletedLine(List<int> filledRows)
         {
             for (int i = filledRows.Count - 1; i >= 0; i--)
@@ -96,7 +100,7 @@ namespace JiufenGames.TetrisAlike.Logic
                     m_board[currentLine - 1, j].ChangeTileData(new object[2] { null, true });
             }
         }
+        #endregion Line manipulation
 
-        #endregion Init
     }
 }
