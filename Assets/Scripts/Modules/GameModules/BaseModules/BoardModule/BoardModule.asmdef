@@ -1,0 +1,17 @@
+{
+    "name": "BoardModule",
+    "rootNamespace": "",
+    "references": [
+        "GUID:ea1edfd02eb3e324d91c0694e651ec5a",
+        "GUID:365873111a27770449e613c7c9f7c4bf"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
