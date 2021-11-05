@@ -30,6 +30,8 @@ namespace JiufenGames.TetrisAlike.Logic
         public void Init(BoardController boardController)
         {
             m_boardController = boardController;
+            m_currentPieceTiles = new List<Vector2Int>();
+            m_currentProjectionPieces = new Vector2Int[4];
         }
 
         public void OnSpawn()
@@ -187,10 +189,10 @@ namespace JiufenGames.TetrisAlike.Logic
                  for (int j = 0; j < tempCurrentPiecesTiles.Length; j++)
                      m_boardController.m_board[tempCurrentPiecesTiles[j].x, tempCurrentPiecesTiles[j].y].ResetTile();
 
-             // Set Piece to botton
-             for (int j = 0; j < tempCurrentPiecesTiles.Length; j++)
-             {
-                 m_boardController.m_board[lowestNotFilledTile + (tempCurrentPiecesTiles[j].x - lowestRowInCurrentPiece), tempCurrentPiecesTiles[j].y].ChangeTileData(new object[2] { m_currentPiece.pieceColor, null });
+                 // Set Piece to botton
+                 for (int j = 0; j < tempCurrentPiecesTiles.Length; j++)
+                 {
+                     m_boardController.m_board[lowestNotFilledTile + (tempCurrentPiecesTiles[j].x - lowestRowInCurrentPiece), tempCurrentPiecesTiles[j].y].ChangeTileData(new object[2] { m_currentPiece.pieceColor, null });
                      m_currentPieceTiles[j] = new Vector2Int(lowestNotFilledTile + (tempCurrentPiecesTiles[j].x - lowestRowInCurrentPiece), tempCurrentPiecesTiles[j].y);
                  }
                  Change4x4CubeStartTile(3, 0);

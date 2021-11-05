@@ -46,7 +46,7 @@ namespace JiufenGames.TetrisAlike.Logic
             _methodParams = base.ChangeTileData(_methodParams);
             TetrisTileData newTileData = m_tileData as TetrisTileData;
 
-            if (_methodParams.Length >=1&& _methodParams[0] != null)
+            if (_methodParams.Length >= 1 && _methodParams[0] != null)
             {
                 if (((m_isPartOfFirstRowAfterRealBoard && newTileData.Color.Equals(PieceConsts.DEFAULT_COLOR)) || m_isPartOfHiddenBoard))
                     newTileData.Color = Color.clear;
@@ -55,7 +55,7 @@ namespace JiufenGames.TetrisAlike.Logic
 
                 m_spriteRenderer.color = newTileData.Color;
             }
-            if (_methodParams.Length >=2 && _methodParams[1] != null)
+            if (_methodParams.Length >= 2 && _methodParams[1] != null)
             {
                 newTileData.IsFilled = (bool)_methodParams[1];
             }

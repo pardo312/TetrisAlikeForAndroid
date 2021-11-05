@@ -34,6 +34,7 @@ namespace JiufenPackages.SceneFlow.Logic
         public void ChangeSceneTo(string nameOfScene)
         {
             m_previousScene = SceneManager.GetActiveScene().name;
+            SceneManager.UnloadSceneAsync(m_previousScene);
             ShowLoadingScene();
             LoadScene(nameOfScene);
         }

@@ -21,7 +21,7 @@ namespace JiufenGames.TetrisAlike.Logic
             SuscribeInputEvents();
         }
 
-        private void DesuscribreInputsEvents()
+        public void DesuscribreInputsEvents()
         {
             InputsController.m_instance.m_actionsDictionary[InputsTetrisActionsConsts.ON_MOVE_PIECE] -= MovePiece;
             InputsController.m_instance.m_actionsDictionary[InputsTetrisActionsConsts.ON_DROP_PIECE] -= DropPiece;

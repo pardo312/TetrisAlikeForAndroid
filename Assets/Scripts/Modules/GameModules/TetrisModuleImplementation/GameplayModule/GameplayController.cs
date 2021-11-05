@@ -1,5 +1,6 @@
 ﻿using Jiufen.Audio;
 using JiufenGames.TetrisAlike.Model;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,6 +11,9 @@ namespace JiufenGames.TetrisAlike.Logic
     public class GameplayController : MonoBehaviour
     {
         #region Fields
+
+        [Header("Delegates")]
+        public Action OnResetScene;
 
         [Header("Controllers")]
         //Board
@@ -46,6 +50,7 @@ namespace JiufenGames.TetrisAlike.Logic
         public void Init(int highscore)
         {
             m_boardController.Init();
+            m_currentPieceController= new CurrentPieceController();
             m_currentPieceController.Init(m_boardController);
             m_scoreController.Init(highscore);
             m_nextPieceController.Init();
@@ -135,7 +140,7 @@ namespace JiufenGames.TetrisAlike.Logic
 
         public void ResetScene()
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            OnResetScene?.Invoke();
         }
         #endregion Flow
 
