@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using JiufenModules.ScoreModule.Logic;
+using UnityEngine;
 
 namespace JiufenGames.TetrisAlike.Logic
 {

@@ -36,6 +36,7 @@ namespace JiufenGames.TetrisAlike.Logic
             if (m_instance == null)
             {
                 m_instance = this;
+                DontDestroyOnLoad(this);
             }
             else
             {

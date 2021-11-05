@@ -135,7 +135,7 @@ namespace JiufenGames.TetrisAlike.Logic
 
         public void ResetScene()
         {
-            SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().name);
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
         #endregion Flow
 

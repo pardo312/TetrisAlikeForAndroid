@@ -14,9 +14,9 @@ namespace JiufenGames.TetrisAlike.Logic
             CreateBoard(BoardConsts.TOTAL_ROWS, BoardConsts.COLUMNS, BoardConsts.OFFSET_TILES);
         }
 
-        public override void CreateBoard(int _rows, int _columns, float _offsetTiles = 1,  Action<int, int> _createdTile = null)
+        public override void CreateBoard(int _rows, int _columns, float _offsetTiles = 1, Action<int, int> _createdTile = null)
         {
-            base.CreateBoard(_rows, _columns, _offsetTiles, (row, column)=>
+            base.CreateBoard(_rows, _columns, _offsetTiles, (row, column) =>
             {
                 m_board[row, column].m_tileRow = row;
                 m_board[row, column].m_tileColumn = column;
@@ -34,7 +34,6 @@ namespace JiufenGames.TetrisAlike.Logic
             List<Vector2Int> currentPieceTiles = new List<Vector2Int>();
 
             int offset = 0;
-            int highestOffset = 0;
             //Spawn Piece in the upper 4x4 space of the board
             for (int i = _pieceRows - 4; i < _pieceRows; i++)
             {
@@ -53,9 +52,7 @@ namespace JiufenGames.TetrisAlike.Logic
                 for (int j = 3; j <= 6; j++)
                     if (_nextPiece.pieceForms[0].pieceTiles[((_pieceRows - 1) - i) + ((j - 3) * PieceForm.PIECE_TILES_WIDTH)])
                     {
-                        if (offset > highestOffset)
-                            piece4x4SquareTiles = new Vector2Int(i + offset - 4, 3);
-
+                        piece4x4SquareTiles = new Vector2Int(i + offset-3 , 3);
                         m_board[i + offset, j].ChangeTileData(new object[2] { _nextPiece.pieceColor, null });
                         currentPieceTiles.Add(new Vector2Int(i + offset, j));
                     }

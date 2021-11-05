@@ -1,10 +1,10 @@
-﻿using System;
+﻿using JiufenModules.ScoreModule.Logic;
+using System;
 using TMPro;
 using UnityEngine;
 
 namespace JiufenGames.TetrisAlike.Logic
 {
-
     public class ScoreView : MonoBehaviour,IScoreView
     {
         [Header("Current Score")]
