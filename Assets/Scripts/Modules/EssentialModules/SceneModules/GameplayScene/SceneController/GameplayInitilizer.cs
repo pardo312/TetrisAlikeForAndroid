@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JiufenGames.TetrisAlike.Logic;
+using System;
 using UnityEngine;
 
 namespace JiufenPackages.SceneFlow.Logic
@@ -11,16 +12,16 @@ namespace JiufenPackages.SceneFlow.Logic
         {
             DataManager.ReadEvent(DataKeys.LOAD_HIGHSCORE, null, (highScore) =>
               {
-                  callback?.Invoke(highScore);
+                  DataManager.ReadEvent(DataKeys.LOAD_LEVEL_DIFFICULTY_SPEED, null, (levelOfDifficultySpeed) =>
+                    {
+                        callback?.Invoke(new GameplayData() { LevelDifficultySpeed = (float)levelOfDifficultySpeed, HighScore = (int)highScore });
+                    });
               });
         }
 
         public void GetTestData(Action<object> callback)
         {
-            DataManager.ReadEvent(DataKeys.LOAD_HIGHSCORE, null, (highScore) =>
-              {
-                  callback?.Invoke(highScore);
-              });
+            callback?.Invoke(new GameplayData() { LevelDifficultySpeed = 0.01f, HighScore = 0 });
         }
     }
 }
