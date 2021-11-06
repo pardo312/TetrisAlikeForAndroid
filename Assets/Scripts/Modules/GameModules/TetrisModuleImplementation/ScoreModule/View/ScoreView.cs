@@ -22,7 +22,8 @@ namespace JiufenGames.TetrisAlike.Logic
         {
             //Highscore
             m_rectParentHighScore.gameObject.SetActive(true);
-            m_scoreValueHighText.text = _initialData.ToString();
+            ScoreData scoreData = _initialData as ScoreData;
+            m_scoreValueHighText.text = scoreData.highScore.ToString();
 
             //Currentscore
             m_rectParentScore.gameObject.SetActive(true);

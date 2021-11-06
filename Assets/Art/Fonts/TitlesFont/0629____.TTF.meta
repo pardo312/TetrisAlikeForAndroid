@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 98dfde88b14187b439e229bdd20bd37f
+guid: f3fd19e2492b4ec4b9cfb85e19cd0c66
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -9,7 +9,7 @@ TrueTypeFontImporter:
   characterPadding: 1
   includeFontData: 1
   fontNames:
-  - Cocogoose
+  - '06 29 '
   fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0

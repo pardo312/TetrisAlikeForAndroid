@@ -1,4 +1,5 @@
 using JiufenPackages.GameManager.Logic;
+using JiufenGames.TetrisAlike.Logic;
 using JiufenPackages.SceneFlow.Logic;
 using System;
 using UnityEngine;
@@ -13,7 +14,6 @@ namespace JiufenGames.TetrisAlike.Logic
         public override void Init(object highScore, Action<bool> callback = null)
         {
             m_gameplayController.Init((int)highScore);
-
             m_playerBehaviour = new PlayerBehaviour();
             m_playerBehaviour.Init(m_gameplayController);
 
@@ -21,8 +21,9 @@ namespace JiufenGames.TetrisAlike.Logic
             m_gameplayController.OnResetScene += OnReset;
         }
 
-        public void OnReset()
+        public void OnReset(int highScore)
         {
+            DataManager.ReadEvent(DataKeys.SAVE_HIGHSCORE, highScore, null);
             m_playerBehaviour.DesuscribreInputsEvents();
             GameManager.m_instance.ChangeSceneTo(SceneNames.GAMEPLAY);
         }

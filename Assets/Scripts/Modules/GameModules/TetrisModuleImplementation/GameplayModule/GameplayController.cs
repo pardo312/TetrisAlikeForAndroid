@@ -13,7 +13,7 @@ namespace JiufenGames.TetrisAlike.Logic
         #region Fields
 
         [Header("Delegates")]
-        public Action OnResetScene;
+        public Action<int> OnResetScene;
 
         [Header("Controllers")]
         //Board
@@ -50,9 +50,9 @@ namespace JiufenGames.TetrisAlike.Logic
         public void Init(int highscore)
         {
             m_boardController.Init();
-            m_currentPieceController= new CurrentPieceController();
+            m_currentPieceController = new CurrentPieceController();
             m_currentPieceController.Init(m_boardController);
-            m_scoreController.Init(highscore);
+            m_scoreController.Init(new ScoreData() { highScore = highscore, initScore = 0 });
             m_nextPieceController.Init();
             m_storePieceController.Init();
 
@@ -140,7 +140,8 @@ namespace JiufenGames.TetrisAlike.Logic
 
         public void ResetScene()
         {
-            OnResetScene?.Invoke();
+            int highScore = m_scoreController.GetHighscore();
+            OnResetScene?.Invoke(highScore);
         }
         #endregion Flow
 
