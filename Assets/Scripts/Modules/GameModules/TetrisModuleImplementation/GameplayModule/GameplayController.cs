@@ -40,6 +40,8 @@ namespace JiufenGames.TetrisAlike.Logic
         private float m_timer = 20;
         private float timesMovementHasBeenMade = 0;
         private bool canStorePiece = true;
+        public bool m_playerChanceCoroutineInit = false;
+        public bool m_playerChancePassed = false;
 
         #endregion Fields
 
@@ -98,9 +100,14 @@ namespace JiufenGames.TetrisAlike.Logic
             //Piece droped and finished
             else if (IsPieceInFinalPosition)
             {
-                if (!GivePlayerAChance())
+                if (!m_playerChancePassed)
+                {
+                    if (!m_playerChanceCoroutineInit)
+                        StartCoroutine(GivePlayerAChance());
                     return;
-
+                }
+                m_playerChanceCoroutineInit = false;
+                m_playerChancePassed = false;
                 FillRow();
             }
             //Drop piece
@@ -127,16 +134,11 @@ namespace JiufenGames.TetrisAlike.Logic
             canStorePiece = true;
         }
 
-        private bool GivePlayerAChance()
+        public IEnumerator GivePlayerAChance()
         {
-            if (timesMovementHasBeenMade < 1)
-            {
-                m_timer = 0f;
-                timesMovementHasBeenMade += Time.deltaTime * 100;
-                return false;
-            }
-            timesMovementHasBeenMade = 0;
-            return true;
+            m_playerChanceCoroutineInit = true;
+            yield return new WaitForSecondsRealtime(0.8f);
+            m_playerChancePassed = true;
         }
 
         public void GoBackToMainMenu()
